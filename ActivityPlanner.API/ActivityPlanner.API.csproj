@@ -10,4 +10,11 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ActivityPlanner.Entities\ActivityPlanner.Entities.csproj" />
+    <ProjectReference Include="..\ActivityPlanner.Presentation\ActivityPlanner.Presentation.csproj" />
+    <ProjectReference Include="..\ActivityPlanner.Repositories\ActivityPlanner.Repositories.csproj" />
+    <ProjectReference Include="..\ActivityPlanner.Services\ActivityPlanner.Services.csproj" />
+  </ItemGroup>
+
 </Project>
