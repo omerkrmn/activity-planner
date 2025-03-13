@@ -1,7 +1,10 @@
+﻿using ActivityPlanner.Entities.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
-namespace ActivityPlanner.API.Controllers
+namespace ActivityPlanner.Presentation.Controller
 {
+
     [ApiController]
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
@@ -29,5 +32,6 @@ namespace ActivityPlanner.API.Controllers
             })
             .ToArray();
         }
+
     }
 }
