@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ActivityPlanner.Entities\ActivityPlanner.Entities.csproj" />
+    <ProjectReference Include="..\ActivityPlanner.Repositories\ActivityPlanner.Repositories.csproj" />
+  </ItemGroup>
+
 </Project>

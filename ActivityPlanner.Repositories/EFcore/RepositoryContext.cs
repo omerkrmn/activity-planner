@@ -7,18 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ActivityPlanner.Repositories.EFcore.RepositoryContext
+namespace ActivityPlanner.Repositories.EFcore
 {
     public class RepositoryContext : IdentityDbContext<AppUser>
     {
         public RepositoryContext(DbContextOptions options) : base(options)
-        {
-            
-        }
-
+        { }
         public DbSet<Activity> Activities { get; set; }
         public DbSet<Subscriber> Subscribers { get; set; }
-        public DbSet<ShortLink> ShortLink {  get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

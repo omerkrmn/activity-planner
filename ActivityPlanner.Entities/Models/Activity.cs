@@ -8,13 +8,14 @@ namespace ActivityPlanner.Entities.Models
 {
     public class Activity
     {
-        public int AppUserId {  get; set; }
+        public Guid Id { get; set; }= Guid.NewGuid();
+        public Guid AppUserId { get; set; } = Guid.NewGuid();
         public AppUser AppUser { get; set; }
 
         public ICollection<Subscriber> Subscribers { get; set; }=new List<Subscriber>();
         public string ActivityName { get; set; }=string.Empty;
         public string ActivityDescription{ get; set; } = string.Empty;
-
+        public string shortLink {  get; set; }=string.Empty;    
 
 
     }
