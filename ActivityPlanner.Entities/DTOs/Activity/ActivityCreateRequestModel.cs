@@ -9,7 +9,7 @@ namespace ActivityPlanner.Entities.DTOs.Activites
 {
     public class ActivityCreateRequestModel
     {
-        public Guid AppUserId { get; set; }
+        public string AppUserId { get; set; }
         public string ActivityName { get; set; } = string.Empty;
         public string ActivityDescription { get; set; } = string.Empty;
     }

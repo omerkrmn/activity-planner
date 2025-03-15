@@ -9,8 +9,8 @@ namespace ActivityPlanner.Entities.DTOs.Activites
 {
     public class ActivityDeleteRequestModel
     {
-        public Guid Id { get; set; }
-        public Guid AppUserId { get; set; }
+        public int Id { get; set; }
+        public int AppUserId { get; set; }
         
     }
 }

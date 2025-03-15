@@ -9,8 +9,8 @@ namespace ActivityPlanner.Entities.DTOs.Activites
 {
     public class ActivityUpdateRequestModel 
     {
-        public Guid Id { get; set; } 
-        public Guid AppUserId { get; set; }
+        public int Id { get; set; } 
+        public string AppUserId { get; set; }
         public string ActivityName { get; set; } = string.Empty;
         public string ActivityDescription { get; set; } = string.Empty;
         public string shortLink { get; set; } = string.Empty;

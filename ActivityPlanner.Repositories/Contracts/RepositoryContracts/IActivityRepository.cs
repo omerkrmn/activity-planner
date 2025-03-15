@@ -10,7 +10,7 @@ namespace ActivityPlanner.Repositories.Contracts.RepositoryContracts
     public interface IActivityRepository : IRepositoryBase<Activity>
     {
         Task<List<Activity>> GetAllActivitiesAsync(bool trackChanges);
-        Task<Activity> GetOneActivityAsync(Guid id, bool trackChanges);
+        Task<Activity> GetOneActivityAsync(int id, bool trackChanges);
         void CreateOneActivitiy(Activity activity);
         void UpdateOneActivitiy(Activity activity);
         void DeleteOneActivitiy(Activity activity);

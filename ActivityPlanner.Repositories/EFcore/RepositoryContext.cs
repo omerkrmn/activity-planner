@@ -1,13 +1,10 @@
-﻿using ActivityPlanner.Entities.Models;
+﻿
+
+using ActivityPlanner.Entities.Models;
+using ActivityPlanner.Repositories.EFcore.Config;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ActivityPlanner.Repositories.EFcore
 {
@@ -15,12 +12,20 @@ namespace ActivityPlanner.Repositories.EFcore
     {
         public RepositoryContext(DbContextOptions<RepositoryContext> options) : base(options) { }
 
-        public DbSet<Activity> Activities { get; set; }
+        public DbSet<Activity> Activities { get; set; } 
         public DbSet<Subscriber> Subscribers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+
+            builder.Entity<Activity>()
+                .HasOne(u => u.AppUser)
+                .WithMany(u => u.Activities)
+                .HasForeignKey(p => p.AppUserId);
+
+            builder.ApplyConfiguration(new RoleConfiguration());
         }
 
 

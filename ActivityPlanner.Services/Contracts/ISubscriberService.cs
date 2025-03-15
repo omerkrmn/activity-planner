@@ -11,7 +11,7 @@ namespace ActivityPlanner.Services.Contracts
     public interface ISubscriberService
     {
         Task<List<SubscriberResponseModel>> GetAllSubscribersAsync(bool trackChanges);
-        Task<SubscriberResponseModel> GetOneSubscriberAsync(Guid id, bool trackChanges);
+        Task<SubscriberResponseModel> GetOneSubscriberAsync(int id, bool trackChanges);
         Task<SubscriberResponseModel> CreateOneSubscriberAsync(SubscriberCreateModel subscriber);
         Task<SubscriberResponseModel> UpdateOneSubscriberAsync(SubscriberUpdateModel subscriber);
         Task<SubscriberResponseModel> DeleteOneSubscriberAsync(SubscriberDeleteModel subscriber);

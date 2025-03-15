@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace ActivityPlanner.Repositories.Migrations
 {
     /// <inheritdoc />
@@ -31,6 +33,8 @@ namespace ActivityPlanner.Repositories.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RefreshTokenExpiryTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -76,9 +80,9 @@ namespace ActivityPlanner.Repositories.Migrations
                 name: "Activities",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AppUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AppUserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AppUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ActivityName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ActivityDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     shortLink = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -87,10 +91,11 @@ namespace ActivityPlanner.Repositories.Migrations
                 {
                     table.PrimaryKey("PK_Activities", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Activities_AspNetUsers_AppUserId1",
-                        column: x => x.AppUserId1,
+                        name: "FK_Activities_AspNetUsers_AppUserId",
+                        column: x => x.AppUserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -182,13 +187,14 @@ namespace ActivityPlanner.Repositories.Migrations
                 name: "Subscribers",
                 columns: table => new
                 {
-                    SubscriberId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SubscriberId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     SubscriberName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SubscriberSurname = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SubscriberMail = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MailValidation = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AttendanceStatus = table.Column<int>(type: "int", nullable: false),
-                    ActivityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    ActivityId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -201,10 +207,20 @@ namespace ActivityPlanner.Repositories.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "685af3ae-f760-401f-a303-2946728314dd", "8ba33fac-e542-4859-8663-416101f4fb0a", "User", "USER" },
+                    { "9d5b9cb2-86d3-4db8-a427-e961acf15965", "c3fad4fb-a14f-43e6-9b7f-c4d0539d5079", "Editor", "EDITOR" },
+                    { "a330656d-3a4e-4022-8ca7-65fa628505f4", "aa66e72f-bcdb-4b01-9600-965c1a940a07", "Admin", "ADMIN" }
+                });
+
             migrationBuilder.CreateIndex(
-                name: "IX_Activities_AppUserId1",
+                name: "IX_Activities_AppUserId",
                 table: "Activities",
-                column: "AppUserId1");
+                column: "AppUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

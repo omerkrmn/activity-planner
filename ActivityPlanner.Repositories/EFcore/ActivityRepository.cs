@@ -29,7 +29,7 @@ namespace ActivityPlanner.Repositories.EFcore
                 .ToListAsync();
         }
 
-        public async Task<Activity> GetOneActivityAsync(Guid id, bool trackChanges) => await FindByCondition(b => b.Id.Equals(id), trackChanges)
+        public async Task<Activity> GetOneActivityAsync(int id, bool trackChanges) => await FindByCondition(b => b.Id.Equals(id), trackChanges)
             .SingleOrDefaultAsync();
 
         public void UpdateOneActivitiy(Activity activity) => Update(activity);

@@ -48,7 +48,7 @@ namespace ActivityPlanner.Services
             return subsResponse;
         }
 
-        public async Task<SubscriberResponseModel> GetOneSubscriberAsync(Guid id, bool trackChanges)
+        public async Task<SubscriberResponseModel> GetOneSubscriberAsync(int id, bool trackChanges)
         {
             var sub = await _repositoryManager.Subscriber.GetOneSubscriberAsync(id, trackChanges);
             if (sub == null) throw new ArgumentNullException();

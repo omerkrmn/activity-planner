@@ -30,7 +30,8 @@ namespace ActivityPlanner.Services
             var tempActivity = _mapper.Map<Activity>(activity);
             _repositoryManager.Activity.CreateOneActivitiy(tempActivity);
             await _repositoryManager.SaveAsync();
-            return _mapper.Map<ActivityResponseModel>(activity);
+
+            return _mapper.Map<ActivityResponseModel>(_mapper.Map<Activity>(activity));
         }
 
         public async Task<ActivityResponseModel> DeleteOneActivitiyAsync(ActivityDeleteRequestModel activity)
@@ -54,7 +55,7 @@ namespace ActivityPlanner.Services
             return activitiesResponse;
         }
 
-        public async Task<ActivityResponseModel> GetOneActivityAsync(Guid id, bool trackChanges)
+        public async Task<ActivityResponseModel> GetOneActivityAsync(int id, bool trackChanges)
         {
             var activity = await _repositoryManager.Activity.GetOneActivityAsync(id, trackChanges);
             if (activity is null)

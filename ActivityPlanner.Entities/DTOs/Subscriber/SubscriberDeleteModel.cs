@@ -10,7 +10,7 @@ namespace ActivityPlanner.Entities.DTOs.Subscriber
     public class SubscriberDeleteModel 
     {
         [Required]  
-        public Guid ActivityId { get; set; }
+        public int ActivityId { get; set; }
         [Required]
         [EmailAddress]
         public string SubscriberMail { get; set; } = string.Empty;

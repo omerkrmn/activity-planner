@@ -11,11 +11,11 @@ namespace ActivityPlanner.Entities.DTOs.Subscriber
 {
     public class SubscriberUpdateModel
     {
-        public Guid SubscriberId { get; set; }
+        public int   SubscriberId { get; set; }
 
         [EmailAddress]
         public AttendanceStatus AttendanceStatus { get; set; }
 
-        public Guid ActivityId { get; set; }
+        public int ActivityId { get; set; }
     }
 }

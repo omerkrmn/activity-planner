@@ -10,7 +10,7 @@ namespace ActivityPlanner.Entities.DTOs.Subscriber
 {
     public class SubscriberResponseModel
     {
-        public Guid SubscriberId { get; set; }
+        public int SubscriberId { get; set; }
         public string SubscriberName { get; set; } = string.Empty;
         public string SubscriberSurname { get; set; } = string.Empty;
         [EmailAddress]
@@ -18,6 +18,6 @@ namespace ActivityPlanner.Entities.DTOs.Subscriber
         public string MailValidation { get; set; } = string.Empty;
         public AttendanceStatus AttendanceStatus { get; set; }
 
-        public Guid ActivityId { get; set; }
+        public int ActivityId { get; set; }
     }
 }

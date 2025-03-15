@@ -24,9 +24,11 @@ namespace ActivityPlanner.Repositories.Migrations
 
             modelBuilder.Entity("ActivityPlanner.Entities.Models.Activity", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ActivityDescription")
                         .IsRequired()
@@ -36,10 +38,8 @@ namespace ActivityPlanner.Repositories.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("AppUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AppUserId1")
+                    b.Property<string>("AppUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("shortLink")
@@ -48,7 +48,7 @@ namespace ActivityPlanner.Repositories.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId1");
+                    b.HasIndex("AppUserId");
 
                     b.ToTable("Activities");
                 });
@@ -98,6 +98,12 @@ namespace ActivityPlanner.Repositories.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RefreshTokenExpiryTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -123,12 +129,14 @@ namespace ActivityPlanner.Repositories.Migrations
 
             modelBuilder.Entity("ActivityPlanner.Entities.Models.Subscriber", b =>
                 {
-                    b.Property<Guid>("SubscriberId")
+                    b.Property<int>("SubscriberId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("ActivityId")
-                        .HasColumnType("uniqueidentifier");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SubscriberId"));
+
+                    b.Property<int>("ActivityId")
+                        .HasColumnType("int");
 
                     b.Property<int>("AttendanceStatus")
                         .HasColumnType("int");
@@ -181,6 +189,29 @@ namespace ActivityPlanner.Repositories.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "685af3ae-f760-401f-a303-2946728314dd",
+                            ConcurrencyStamp = "8ba33fac-e542-4859-8663-416101f4fb0a",
+                            Name = "User",
+                            NormalizedName = "USER"
+                        },
+                        new
+                        {
+                            Id = "9d5b9cb2-86d3-4db8-a427-e961acf15965",
+                            ConcurrencyStamp = "c3fad4fb-a14f-43e6-9b7f-c4d0539d5079",
+                            Name = "Editor",
+                            NormalizedName = "EDITOR"
+                        },
+                        new
+                        {
+                            Id = "a330656d-3a4e-4022-8ca7-65fa628505f4",
+                            ConcurrencyStamp = "aa66e72f-bcdb-4b01-9600-965c1a940a07",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -293,7 +324,9 @@ namespace ActivityPlanner.Repositories.Migrations
                 {
                     b.HasOne("ActivityPlanner.Entities.Models.AppUser", "AppUser")
                         .WithMany("Activities")
-                        .HasForeignKey("AppUserId1");
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("AppUser");
                 });

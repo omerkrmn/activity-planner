@@ -10,5 +10,6 @@ namespace ActivityPlanner.Services.Contracts
     {
         IActivityService ActivityService { get; }   
         ISubscriberService SubscriberService { get; }
+        IAuthenticationService AuthenticationService {  get; }
     }
 }

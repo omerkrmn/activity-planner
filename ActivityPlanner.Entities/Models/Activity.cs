@@ -8,8 +8,8 @@ namespace ActivityPlanner.Entities.Models
 {
     public class Activity
     {
-        public Guid Id { get; set; }= Guid.NewGuid();
-        public Guid AppUserId { get; set; } = Guid.NewGuid();
+        public int Id { get; set; }
+        public string AppUserId { get; set; }
         public AppUser AppUser { get; set; }
 
         public ICollection<Subscriber> Subscribers { get; set; }=new List<Subscriber>();

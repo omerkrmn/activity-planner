@@ -10,7 +10,7 @@ namespace ActivityPlanner.Entities.Models
 {
     public class Subscriber 
     {
-        public Guid SubscriberId { get; set; }= Guid.NewGuid();
+        public int SubscriberId { get; set; }
         public string SubscriberName { get; set; } = string.Empty;
         public string SubscriberSurname { get; set; } = string.Empty;
         [EmailAddress]
@@ -18,7 +18,7 @@ namespace ActivityPlanner.Entities.Models
         public string MailValidation { get; set; } = string.Empty;
         public AttendanceStatus AttendanceStatus { get; set; } = AttendanceStatus.Confirmed;
 
-        public Guid ActivityId { get; set; }
+        public int ActivityId { get; set; }
         public Activity Activity { get; set; }
 
     }
