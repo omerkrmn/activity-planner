@@ -26,7 +26,7 @@ namespace ActivityPlanner.Repositories.EFcore
             return await FindAll(trackChanges).OrderBy(s => s.SubscriberId).ToListAsync();
         }
 
-        public async Task<Subscriber> GetOneSubscriberAsync(int id, bool trackChanges)=> await FindByCondition(b => b.SubscriberId.Equals(id), trackChanges)
+        public async Task<Subscriber> GetOneSubscriberAsync(Guid id, bool trackChanges)=> await FindByCondition(b => b.SubscriberId.Equals(id), trackChanges)
             .SingleOrDefaultAsync();
 
         public void UpdateOneSubscriber(Subscriber subscriber)=>Delete(subscriber);

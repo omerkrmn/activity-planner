@@ -1,6 +1,9 @@
-﻿using ActivityPlanner.Entities.Models;
+﻿using ActivityPlanner.Entities.DTOs.Activites;
+using ActivityPlanner.Entities.DTOs.Activity;
+using ActivityPlanner.Entities.Models;
 using ActivityPlanner.Repositories.Contracts;
 using ActivityPlanner.Services.Contracts;
+using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,38 +16,58 @@ namespace ActivityPlanner.Services
     {
         //todo: dto ları burada kullanacaksın şuanlık bu şekilde kalsınlar daha sonra dtolara geç!
         private readonly IRepositoryManager _repositoryManager;
-
-        public ActivityService(IRepositoryManager repositoryManager)
+        private readonly IMapper _mapper;
+        public ActivityService(IRepositoryManager repositoryManager, IMapper mapper)
         {
             _repositoryManager = repositoryManager;
+            _mapper = mapper;
         }
-        public async void CreateOneActivitiy(Activity activity)
+
+        public async Task<ActivityResponseModel> CreateOneActivitiyAsync(ActivityCreateRequestModel activity)
+        {
+            if (activity == null)
+                throw new ArgumentNullException();
+            var tempActivity = _mapper.Map<Activity>(activity);
+            _repositoryManager.Activity.CreateOneActivitiy(tempActivity);
+            await _repositoryManager.SaveAsync();
+            return _mapper.Map<ActivityResponseModel>(activity);
+        }
+
+        public async Task<ActivityResponseModel> DeleteOneActivitiyAsync(ActivityDeleteRequestModel activity)
         {
             if (activity is null)
                 throw new ArgumentNullException();
+            var check = await _repositoryManager.Activity.GetOneActivityAsync(activity.Id, true);
 
-            _repositoryManager.Activity.CreateOneActivitiy(activity);
-            await _repositoryManager.SaveAsync();   
+            if (check is null)
+                throw new ArgumentNullException();
+            _repositoryManager.Activity.DeleteOneActivitiy(check);
+            await _repositoryManager.SaveAsync();
+            return _mapper.Map<ActivityResponseModel>(check);
+
         }
 
-        public void DeleteOneActivitiy(Activity activity)
+        public async Task<List<ActivityResponseModel>> GetAllActivitiesAsync(bool trackChanges)
         {
-            throw new NotImplementedException();
+            var activities = await _repositoryManager.Activity.GetAllActivitiesAsync(trackChanges);
+            var activitiesResponse = _mapper.Map<List<ActivityResponseModel>>(activities);
+            return activitiesResponse;
         }
 
-        public Task<List<Activity>> GetAllActivitiesAsync(bool trackChanges)
+        public async Task<ActivityResponseModel> GetOneActivityAsync(Guid id, bool trackChanges)
         {
-            throw new NotImplementedException();
+            var activity = await _repositoryManager.Activity.GetOneActivityAsync(id, trackChanges);
+            if (activity is null)
+                throw new ArgumentNullException();
+            return _mapper.Map<ActivityResponseModel>(activity);
         }
 
-        public Task<Activity> GetOneActivityAsync(int id, bool trackChanges)
+        public async Task<ActivityResponseModel> UpdateOneActivitiyAsync(ActivityUpdateRequestModel activity)
         {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateOneActivitiy(Activity activity)
-        {
-            throw new NotImplementedException();
+            if (activity is null) throw new ArgumentNullException();
+            var actv = await _repositoryManager.Activity.GetOneActivityAsync(activity.Id, true);
+            await _repositoryManager.SaveAsync();
+            return _mapper.Map<ActivityResponseModel>(actv);
         }
     }
 }
