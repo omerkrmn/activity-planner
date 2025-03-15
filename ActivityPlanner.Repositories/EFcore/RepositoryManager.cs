@@ -10,11 +10,11 @@ namespace ActivityPlanner.Repositories.EFcore
         private readonly Lazy<IActivityRepository> _activityRepository;
         private readonly Lazy<ISubscriberRepository> _subscriberRepository;
 
-        public RepositoryManager(RepositoryContext context, IActivityRepository activityRepository, ISubscriberRepository subscriberRepository)
+        public RepositoryManager(RepositoryContext context)
         {
             _context = context;
             _activityRepository = new Lazy<IActivityRepository>(() => new ActivityRepository(_context));
-            _subscriberRepository = new Lazy<ISubscriberRepository>(()=>new SubscriberRepository(_context));
+            _subscriberRepository = new Lazy<ISubscriberRepository>(() => new SubscriberRepository(_context));
         }
         public IActivityRepository Activity => _activityRepository.Value;
         public ISubscriberRepository Subscriber => _subscriberRepository.Value;
