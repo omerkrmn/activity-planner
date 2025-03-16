@@ -13,9 +13,11 @@ namespace ActivityPlanner.Services.Contracts
     {
         Task<List<ActivityResponseModel>> GetAllActivitiesAsync(bool trackChanges);
         Task<ActivityResponseModel> GetOneActivityAsync(int id, bool trackChanges);
-        Task<ActivityResponseModel> CreateOneActivitiyAsync(ActivityCreateRequestModel activity);
+        Task<ActivityResponseModel> CreateOneActivitiyAsync(ActivityCreateRequestModel activity, string userId);
         Task<ActivityResponseModel> UpdateOneActivitiyAsync(ActivityUpdateRequestModel activity);
-        Task<ActivityResponseModel> DeleteOneActivitiyAsync(ActivityDeleteRequestModel activity);
-        
+        Task<ActivityResponseModel> DeleteOneActivitiyAsync(ActivityDeleteRequestModel activity, string userId);
+
+        Task<List<ActivityResponseModel>> GetAllActivitiesByUser(bool trackChanges, string userName);
+
     }
 }

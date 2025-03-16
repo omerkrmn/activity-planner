@@ -29,13 +29,19 @@ namespace ActivityPlanner.Presentation.Controllers
             var subscribers = await _service.ActivityService.GetAllActivitiesAsync(false);
             return Ok(subscribers);
         }
+        [HttpGet("GetAllActivityByUserName")]
+        public async Task<IActionResult> GetAllActivityByUserName([FromQuery]string userName)
+        {
+            var activities =await _service.ActivityService.GetAllActivitiesByUser(false, userName);
+            return Ok(activities);
+        }
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateActivity([FromBody] ActivityCreateRequestModel requestModel)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null) return Unauthorized();
-            var response = await _service.ActivityService.CreateOneActivitiyAsync(requestModel);
+            var response = await _service.ActivityService.CreateOneActivitiyAsync(requestModel,userId);
             return Ok(response);
         }
     }

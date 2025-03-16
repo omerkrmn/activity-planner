@@ -85,7 +85,11 @@ namespace ActivityPlanner.Repositories.Migrations
                     AppUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ActivityName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ActivityDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    shortLink = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    shortLink = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastUpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastRegistrationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    isActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -194,7 +198,9 @@ namespace ActivityPlanner.Repositories.Migrations
                     SubscriberMail = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MailValidation = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AttendanceStatus = table.Column<int>(type: "int", nullable: false),
-                    ActivityId = table.Column<int>(type: "int", nullable: false)
+                    ActivityId = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastUpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {

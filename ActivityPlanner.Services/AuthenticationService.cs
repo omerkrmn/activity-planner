@@ -57,7 +57,7 @@ namespace ActivityPlanner.Services
             if (user is null ||
                 user.RefreshToken != tokenDto.RefreshToken ||
                 user.RefreshTokenExpiryTime <= DateTime.Now)
-                throw new Exception("");
+                throw new Exception("Token error");
 
             _user = user;
             return await CreateToken(populateExp: false);

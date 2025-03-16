@@ -3,6 +3,7 @@ using ActivityPlanner.Repositories.Contracts.RepositoryContracts;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,19 +18,30 @@ namespace ActivityPlanner.Repositories.EFcore
         }
         //some other functions
 
+        public async Task<List<Activity>> GetAllActivitiesWithUserAsync(bool trackChanges,string userName)
+        {
+            return await
+                FindAll(trackChanges)
+                .Include(b=>b.AppUser)
+                .Where(a=>a.AppUser.UserName.Equals(userName))
+                .ToListAsync();
+        }
+
         public void CreateOneActivitiy(Activity activity) => Create(activity);
 
         public void DeleteOneActivitiy(Activity activity) => Delete(activity);
 
         public async Task<List<Activity>> GetAllActivitiesAsync(bool trackChanges)
         {
+
             return await
                 FindAll(trackChanges)
                 .OrderBy(a => a.Id)
                 .ToListAsync();
         }
 
-        public async Task<Activity> GetOneActivityAsync(int id, bool trackChanges) => await FindByCondition(b => b.Id.Equals(id), trackChanges)
+        public async Task<Activity> GetOneActivityAsync(int id, bool trackChanges) => 
+            await FindByCondition(b => b.Id.Equals(id), trackChanges)
             .SingleOrDefaultAsync();
 
         public void UpdateOneActivitiy(Activity activity) => Update(activity);

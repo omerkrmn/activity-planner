@@ -5,6 +5,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddCors(opt => opt.AddPolicy(name: "MyAllowSpecificOrigins",
+    policy => 
+    {
+        policy.AllowAnyOrigin();
+    }
+    ));
 //builder.Services.AddSwaggerGen();
 builder.Services.AddOpenApi();  
 builder.Services.ConfigureSqlContext(builder.Configuration);
@@ -15,6 +21,7 @@ builder.Services.ConfigureIdentity();
 builder.Services.ConfigureJWT(builder.Configuration);
 var app = builder.Build();
 app.ConfigureExceptionHandler();
+app.UseCors("MyAllowSpecificOrigins");
 
 if (app.Environment.IsDevelopment())
 {

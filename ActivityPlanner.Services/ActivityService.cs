@@ -22,20 +22,21 @@ namespace ActivityPlanner.Services
             _repositoryManager = repositoryManager;
             _mapper = mapper;
         }
-
-        public async Task<ActivityResponseModel> CreateOneActivitiyAsync(ActivityCreateRequestModel activity)
+        public async Task<ActivityResponseModel> CreateOneActivitiyAsync(ActivityCreateRequestModel activity, string userId)
         {
             if (activity == null)
                 throw new ArgumentNullException();
-            
             var tempActivity = _mapper.Map<Activity>(activity);
+            tempActivity.AppUserId = userId;
+
             _repositoryManager.Activity.CreateOneActivitiy(tempActivity);
+
             await _repositoryManager.SaveAsync();
 
-            return _mapper.Map<ActivityResponseModel>(_mapper.Map<Activity>(activity));
+            return _mapper.Map<ActivityResponseModel>(_mapper.Map<Activity>(tempActivity));
         }
 
-        public async Task<ActivityResponseModel> DeleteOneActivitiyAsync(ActivityDeleteRequestModel activity)
+        public async Task<ActivityResponseModel> DeleteOneActivitiyAsync(ActivityDeleteRequestModel activity, string userId)
         {
             if (activity is null)
                 throw new ArgumentNullException();
@@ -43,8 +44,11 @@ namespace ActivityPlanner.Services
 
             if (check is null)
                 throw new ArgumentNullException();
+
+            check.AppUserId = userId;
             _repositoryManager.Activity.DeleteOneActivitiy(check);
             await _repositoryManager.SaveAsync();
+
             return _mapper.Map<ActivityResponseModel>(check);
 
         }
@@ -54,6 +58,13 @@ namespace ActivityPlanner.Services
             var activities = await _repositoryManager.Activity.GetAllActivitiesAsync(trackChanges);
             var activitiesResponse = _mapper.Map<List<ActivityResponseModel>>(activities);
             return activitiesResponse;
+        }
+
+        public async Task<List<ActivityResponseModel>> GetAllActivitiesByUser(bool trackChanges, string userName)
+        {
+            var activities = await _repositoryManager.Activity.GetAllActivitiesWithUserAsync(trackChanges,userName);
+            var response = _mapper.Map<List<ActivityResponseModel>>(activities);
+            return response;
         }
 
         public async Task<ActivityResponseModel> GetOneActivityAsync(int id, bool trackChanges)

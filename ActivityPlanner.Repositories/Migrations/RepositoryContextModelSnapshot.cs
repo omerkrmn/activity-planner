@@ -42,6 +42,18 @@ namespace ActivityPlanner.Repositories.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("LastRegistrationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("isActive")
+                        .HasColumnType("bit");
+
                     b.Property<string>("shortLink")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -140,6 +152,12 @@ namespace ActivityPlanner.Repositories.Migrations
 
                     b.Property<int>("AttendanceStatus")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("MailValidation")
                         .IsRequired()

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ActivityPlanner.Repositories.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20250315184024__init")]
+    [Migration("20250316140801__init")]
     partial class _init
     {
         /// <inheritdoc />
@@ -44,6 +44,18 @@ namespace ActivityPlanner.Repositories.Migrations
                     b.Property<string>("AppUserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("LastRegistrationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("isActive")
+                        .HasColumnType("bit");
 
                     b.Property<string>("shortLink")
                         .IsRequired()
@@ -143,6 +155,12 @@ namespace ActivityPlanner.Repositories.Migrations
 
                     b.Property<int>("AttendanceStatus")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("MailValidation")
                         .IsRequired()

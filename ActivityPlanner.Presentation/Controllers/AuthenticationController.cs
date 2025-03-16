@@ -62,14 +62,5 @@ namespace ActivityPlanner.Presentation.Controllers
                 .RefreshToken(tokenDto);
             return Ok(tokenDtoToReturn);
         }
-        [Authorize]
-        [HttpGet("Me")]
-        public IActionResult GetMe()
-        {
-            var user = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (user == null)
-                return Unauthorized();
-            return Ok(user);
-        }
     }
 }

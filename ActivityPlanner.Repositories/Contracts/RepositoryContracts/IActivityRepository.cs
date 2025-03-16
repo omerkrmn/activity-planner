@@ -11,6 +11,7 @@ namespace ActivityPlanner.Repositories.Contracts.RepositoryContracts
     {
         Task<List<Activity>> GetAllActivitiesAsync(bool trackChanges);
         Task<Activity> GetOneActivityAsync(int id, bool trackChanges);
+        Task<List<Activity>> GetAllActivitiesWithUserAsync(bool trackChanges, string userName);
         void CreateOneActivitiy(Activity activity);
         void UpdateOneActivitiy(Activity activity);
         void DeleteOneActivitiy(Activity activity);
