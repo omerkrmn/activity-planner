@@ -1,14 +1,12 @@
 using ActivityPlanner.API.Extensions;
-using ActivityPlanner.Repositories.Contracts.RepositoryContracts;
-using ActivityPlanner.Repositories.EFcore;
-using ActivityPlanner.Services.Contracts;
-using ActivityPlanner.Services;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+//builder.Services.AddSwaggerGen();
+builder.Services.AddOpenApi();  
 builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
@@ -20,8 +18,9 @@ app.ConfigureExceptionHandler();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.MapOpenApi();
+    app.MapScalarApiReference();
+    
 }
 
 app.UseHttpsRedirection();
