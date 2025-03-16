@@ -9,8 +9,11 @@ namespace ActivityPlanner.Entities.Models
 {
     public class AppUser : IdentityUser
     {
+
         public DateTime CreatedAt { get; set; }
         public ICollection<Activity> Activities { get; set; } = new List<Activity>();
+        public String? RefreshToken { get; set; }
+        public DateTime RefreshTokenExpiryTime { get; set; }
 
     }
 }
