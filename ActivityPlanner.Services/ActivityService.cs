@@ -27,6 +27,7 @@ namespace ActivityPlanner.Services
         {
             if (activity == null)
                 throw new ArgumentNullException();
+            
             var tempActivity = _mapper.Map<Activity>(activity);
             _repositoryManager.Activity.CreateOneActivitiy(tempActivity);
             await _repositoryManager.SaveAsync();

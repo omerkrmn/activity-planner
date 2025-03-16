@@ -1,9 +1,11 @@
 ﻿using ActivityPlanner.Entities.DTOs.Auth;
 using ActivityPlanner.Services.Contracts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -59,6 +61,15 @@ namespace ActivityPlanner.Presentation.Controllers
                 .AuthenticationService
                 .RefreshToken(tokenDto);
             return Ok(tokenDtoToReturn);
+        }
+        [Authorize]
+        [HttpGet("Me")]
+        public IActionResult GetMe()
+        {
+            var user = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (user == null)
+                return Unauthorized();
+            return Ok(user);
         }
     }
 }
