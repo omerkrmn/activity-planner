@@ -26,6 +26,14 @@ namespace ActivityPlanner.Repositories.EFcore
                 .Where(a=>a.AppUser.UserName.Equals(userName))
                 .ToListAsync();
         }
+        public async Task<Activity> GetOneActivityAsync(string userName, string activityName, bool trackChanges)
+        {
+            return await FindAll(trackChanges)
+                .Where(b=>b.AppUser.UserName.Equals(userName))
+                .Include(b => b.AppUser)
+                .Where(b => b.ActivityName.Equals(activityName))
+                .SingleOrDefaultAsync();
+        }
 
         public void CreateOneActivitiy(Activity activity) => Create(activity);
 

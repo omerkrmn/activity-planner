@@ -22,6 +22,16 @@ namespace ActivityPlanner.Services
             _repositoryManager = repositoryManager;
             _mapper = mapper;
         }
+
+        //public async Task<ActivityResponseModel> GetOneActivityAsy(string link)
+        //{
+        //    if (link is null)
+        //        throw new ArgumentNullException(nameof(Activity.shortLink));
+        //    var activity = await _repositoryManager.Activity.GetOneActivityByShortLink(link,false);
+        //    await _repositoryManager.SaveAsync();
+        //    var response = _mapper.Map<ActivityResponseModel>(activity);
+        //    return response;
+        //}
         public async Task<ActivityResponseModel> CreateOneActivitiyAsync(ActivityCreateRequestModel activity, string userId)
         {
             if (activity == null)
@@ -66,6 +76,15 @@ namespace ActivityPlanner.Services
             var response = _mapper.Map<List<ActivityResponseModel>>(activities);
             return response;
         }
+        public async Task<ActivityResponseModel> GetOneActivityAsync(string userName, string activityName)
+        {
+            if (userName is null || activityName is null)
+                throw new ArgumentNullException("user name or activity name is null");
+            var activity = await _repositoryManager.Activity.GetOneActivityAsync(userName,activityName, false);
+            if (activity is null)
+                throw new ArgumentNullException();
+            return _mapper.Map<ActivityResponseModel>(activity);
+        }
 
         public async Task<ActivityResponseModel> GetOneActivityAsync(int id, bool trackChanges)
         {
@@ -75,6 +94,7 @@ namespace ActivityPlanner.Services
             return _mapper.Map<ActivityResponseModel>(activity);
         }
 
+        
         public async Task<ActivityResponseModel> UpdateOneActivitiyAsync(ActivityUpdateRequestModel activity)
         {
             if (activity is null) throw new ArgumentNullException();

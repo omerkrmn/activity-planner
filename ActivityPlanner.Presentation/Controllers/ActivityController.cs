@@ -30,9 +30,9 @@ namespace ActivityPlanner.Presentation.Controllers
             return Ok(subscribers);
         }
         [HttpGet("GetAllActivityByUserName")]
-        public async Task<IActionResult> GetAllActivityByUserName([FromQuery]string userName)
+        public async Task<IActionResult> GetAllActivityByUserName([FromQuery] string userName)
         {
-            var activities =await _service.ActivityService.GetAllActivitiesByUser(false, userName);
+            var activities = await _service.ActivityService.GetAllActivitiesByUser(false, userName);
             return Ok(activities);
         }
         [Authorize]
@@ -41,8 +41,16 @@ namespace ActivityPlanner.Presentation.Controllers
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null) return Unauthorized();
-            var response = await _service.ActivityService.CreateOneActivitiyAsync(requestModel,userId);
+            var response = await _service.ActivityService.CreateOneActivitiyAsync(requestModel, userId);
             return Ok(response);
+        }
+        [HttpGet("GetActivityByShortLink/{userName}/{activityName}")]
+        public async Task<IActionResult> GetActivityByShortLink([FromRoute] string userName, [FromRoute] string activityName)
+        {
+            var activity = await _service.ActivityService.GetOneActivityAsync(userName, activityName);
+            if (activity == null)
+                return NotFound();
+            return Ok(activity);
         }
     }
 }
