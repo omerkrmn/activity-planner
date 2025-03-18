@@ -1,9 +1,11 @@
 ﻿using ActivityPlanner.Entities.DTOs.Activites;
 using ActivityPlanner.Entities.DTOs.Activity;
+using ActivityPlanner.Entities.Exceptions;
 using ActivityPlanner.Entities.Models;
 using ActivityPlanner.Repositories.Contracts;
 using ActivityPlanner.Services.Contracts;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,21 +48,22 @@ namespace ActivityPlanner.Services
             return _mapper.Map<ActivityResponseModel>(_mapper.Map<Activity>(tempActivity));
         }
 
-        public async Task<ActivityResponseModel> DeleteOneActivitiyAsync(ActivityDeleteRequestModel activity, string userId)
+        public async Task<ActivityResponseModel> DeleteOneActivitiyAsync(string userId, string activityName)
         {
-            if (activity is null)
-                throw new ArgumentNullException();
-            var check = await _repositoryManager.Activity.GetOneActivityAsync(activity.Id, true);
+            if (string.IsNullOrEmpty(activityName))
+                throw new ArgumentNullException(nameof(activityName));
+            var activity = await _repositoryManager.Activity.FindAll(true).Include(u => u.AppUser).Where(u=>u.AppUser.Id.Equals(userId)).SingleOrDefaultAsync();
+            if (activity == null)
+                throw new NotFoundException(nameof(AppUser));
 
-            if (check is null)
-                throw new ArgumentNullException();
+            var userName = activity.AppUser.UserName;
+            if (userName == null)
+                throw new NotFoundException(nameof(AppUser));
+            var result = await _repositoryManager.Activity.GetOneActivityAsync(userName!, activityName, true);
 
-            check.AppUserId = userId;
-            _repositoryManager.Activity.DeleteOneActivitiy(check);
+            _repositoryManager.Activity.Delete(result);
             await _repositoryManager.SaveAsync();
-
-            return _mapper.Map<ActivityResponseModel>(check);
-
+            return _mapper.Map<ActivityResponseModel>(result);
         }
 
         public async Task<List<ActivityResponseModel>> GetAllActivitiesAsync(bool trackChanges)

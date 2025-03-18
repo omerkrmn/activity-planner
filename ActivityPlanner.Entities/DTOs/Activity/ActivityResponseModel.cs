@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace ActivityPlanner.Entities.DTOs.Activity
 {
+    //buna çokta gerek olmayabilir.
     public class ActivityResponseModel
     {
         public int Id { get; set; }
@@ -14,6 +15,7 @@ namespace ActivityPlanner.Entities.DTOs.Activity
 
         public string ActivityName { get; set; } = string.Empty;
         public string ActivityDescription { get; set; } = string.Empty;
-        public string shortLink { get; set; } = string.Empty;
+        public int AttendanceStatusConfirmedCount { get; set; } = 0;
+        public int AttendanceStatusUnsureCount { get; set; } = 0;
     }
 }

@@ -29,8 +29,8 @@ namespace ActivityPlanner.Presentation.Controllers
             var subscribers = await _service.ActivityService.GetAllActivitiesAsync(false);
             return Ok(subscribers);
         }
-        [HttpGet("GetAllActivityByUserName")]
-        public async Task<IActionResult> GetAllActivityByUserName([FromQuery] string userName)
+        [HttpGet("{userName}")]
+        public async Task<IActionResult> GetAllActivityByUserName([FromRoute] string userName)
         {
             var activities = await _service.ActivityService.GetAllActivitiesByUser(false, userName);
             return Ok(activities);
@@ -44,12 +44,22 @@ namespace ActivityPlanner.Presentation.Controllers
             var response = await _service.ActivityService.CreateOneActivitiyAsync(requestModel, userId);
             return Ok(response);
         }
-        [HttpGet("GetActivityByShortLink/{userName}/{activityName}")]
+        [HttpGet("{userName}/{activityName}")]
         public async Task<IActionResult> GetActivityByShortLink([FromRoute] string userName, [FromRoute] string activityName)
         {
             var activity = await _service.ActivityService.GetOneActivityAsync(userName, activityName);
             if (activity == null)
                 return NotFound();
+            return Ok(activity);
+        }
+        [Authorize]
+        [HttpDelete("{activityName}")]
+        public async Task<IActionResult> DeleteActivity([FromRoute] string activityName)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId is null)
+                return Unauthorized();
+            var activity = await _service.ActivityService.DeleteOneActivitiyAsync(userId,activityName);
             return Ok(activity);
         }
     }

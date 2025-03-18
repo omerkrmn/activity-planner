@@ -13,6 +13,6 @@ namespace ActivityPlanner.Entities.DTOs.Activites
         public string AppUserId { get; set; } = string.Empty;
         public string ActivityName { get; set; } = string.Empty;
         public string ActivityDescription { get; set; } = string.Empty;
-        public string shortLink { get; set; } = string.Empty;
+        
     }
 }

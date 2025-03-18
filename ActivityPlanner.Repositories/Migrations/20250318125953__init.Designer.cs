@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ActivityPlanner.Repositories.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20250316140801__init")]
+    [Migration("20250318125953__init")]
     partial class _init
     {
         /// <inheritdoc />
@@ -45,6 +45,12 @@ namespace ActivityPlanner.Repositories.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("AttendanceStatusConfirmedCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AttendanceStatusUnsureCount")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -56,10 +62,6 @@ namespace ActivityPlanner.Repositories.Migrations
 
                     b.Property<bool>("isActive")
                         .HasColumnType("bit");
-
-                    b.Property<string>("shortLink")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

@@ -83,9 +83,10 @@ namespace ActivityPlanner.Repositories.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AppUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    AttendanceStatusConfirmedCount = table.Column<int>(type: "int", nullable: false),
+                    AttendanceStatusUnsureCount = table.Column<int>(type: "int", nullable: false),
                     ActivityName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ActivityDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    shortLink = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastUpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastRegistrationDate = table.Column<DateTime>(type: "datetime2", nullable: false),

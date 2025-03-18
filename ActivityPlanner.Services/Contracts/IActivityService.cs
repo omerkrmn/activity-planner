@@ -18,7 +18,7 @@ namespace ActivityPlanner.Services.Contracts
 
         Task<ActivityResponseModel> CreateOneActivitiyAsync(ActivityCreateRequestModel activity, string userId);
         Task<ActivityResponseModel> UpdateOneActivitiyAsync(ActivityUpdateRequestModel activity);
-        Task<ActivityResponseModel> DeleteOneActivitiyAsync(ActivityDeleteRequestModel activity, string userId);
+        Task<ActivityResponseModel> DeleteOneActivitiyAsync(string userId,string activityName);
 
         Task<List<ActivityResponseModel>> GetAllActivitiesByUser(bool trackChanges, string userName);
 
