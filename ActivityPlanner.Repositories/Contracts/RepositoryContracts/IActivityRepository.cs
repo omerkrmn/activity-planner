@@ -11,6 +11,7 @@ namespace ActivityPlanner.Repositories.Contracts.RepositoryContracts
     public interface IActivityRepository : IRepositoryBase<Activity>
     {
         Task<List<Activity>> GetAllActivitiesAsync(bool trackChanges);
+        Task<List<Activity>> GetAllActivitiesWithSubscriberAsync(bool trackChanges);
         
         Task<Activity> GetOneActivityAsync(int id, bool trackChanges);
         Task<Activity> GetOneActivityAsync(string userName, string activityName,bool trackChanges);
