@@ -1,5 +1,6 @@
 ﻿using ActivityPlanner.Entities.DTOs.Activites;
 using ActivityPlanner.Entities.DTOs.Activity;
+using ActivityPlanner.Entities.Enums;
 using ActivityPlanner.Entities.Exceptions;
 using ActivityPlanner.Entities.Models;
 using ActivityPlanner.Repositories.Contracts;
@@ -25,15 +26,6 @@ namespace ActivityPlanner.Services
             _mapper = mapper;
         }
 
-        //public async Task<ActivityResponseModel> GetOneActivityAsy(string link)
-        //{
-        //    if (link is null)
-        //        throw new ArgumentNullException(nameof(Activity.shortLink));
-        //    var activity = await _repositoryManager.Activity.GetOneActivityByShortLink(link,false);
-        //    await _repositoryManager.SaveAsync();
-        //    var response = _mapper.Map<ActivityResponseModel>(activity);
-        //    return response;
-        //}
         public async Task<ActivityResponseModel> CreateOneActivitiyAsync(ActivityCreateRequestModel activity, string userId)
         {
             if (activity == null)
@@ -52,7 +44,7 @@ namespace ActivityPlanner.Services
         {
             if (string.IsNullOrEmpty(activityName))
                 throw new ArgumentNullException(nameof(activityName));
-            var activity = await _repositoryManager.Activity.FindAll(true).Include(u => u.AppUser).Where(u=>u.AppUser.Id.Equals(userId)).SingleOrDefaultAsync();
+            var activity = await _repositoryManager.Activity.FindAll(true).Include(u => u.AppUser).Where(u => u.AppUser.Id.Equals(userId)).SingleOrDefaultAsync();
             if (activity == null)
                 throw new NotFoundException(nameof(AppUser));
 
@@ -75,7 +67,7 @@ namespace ActivityPlanner.Services
 
         public async Task<List<ActivityResponseModel>> GetAllActivitiesByUser(bool trackChanges, string userName)
         {
-            var activities = await _repositoryManager.Activity.GetAllActivitiesWithUserAsync(trackChanges,userName);
+            var activities = await _repositoryManager.Activity.GetAllActivitiesWithUserAsync(trackChanges, userName);
             var response = _mapper.Map<List<ActivityResponseModel>>(activities);
             return response;
         }
@@ -83,7 +75,7 @@ namespace ActivityPlanner.Services
         {
             if (userName is null || activityName is null)
                 throw new ArgumentNullException("user name or activity name is null");
-            var activity = await _repositoryManager.Activity.GetOneActivityAsync(userName,activityName, false);
+            var activity = await _repositoryManager.Activity.GetOneActivityAsync(userName, activityName, false);
             if (activity is null)
                 throw new ArgumentNullException();
             return _mapper.Map<ActivityResponseModel>(activity);
@@ -97,7 +89,7 @@ namespace ActivityPlanner.Services
             return _mapper.Map<ActivityResponseModel>(activity);
         }
 
-        
+
         public async Task<ActivityResponseModel> UpdateOneActivitiyAsync(ActivityUpdateRequestModel activity)
         {
             if (activity is null) throw new ArgumentNullException();

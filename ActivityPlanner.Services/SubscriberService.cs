@@ -18,6 +18,7 @@ namespace ActivityPlanner.Services
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
 
+
         public SubscriberService(IRepositoryManager repositoryManager, IMapper mapper)
         {
             _repositoryManager = repositoryManager;
@@ -27,18 +28,27 @@ namespace ActivityPlanner.Services
         public async Task<SubscriberResponseModel> CreateOneSubscriberAsync(SubscriberCreateModel subscriber)
         {
             if (subscriber == null) throw new ArgumentNullException(nameof(subscriber));
-            var tempActivity = _mapper.Map<Subscriber>(subscriber);
-            _repositoryManager.Subscriber.CreateOneSubscriber(tempActivity);
+            var subcriberTemp = _mapper.Map<Subscriber>(subscriber);
+            _repositoryManager.Subscriber.CreateOneSubscriber(subcriberTemp);
+
+            var activity = await _repositoryManager.Activity.GetOneActivityAsync(subscriber.ActivityId, true);
+
+            if (subscriber.AttendanceStatus == Entities.Enums.AttendanceStatus.Confirmed)
+                activity.AttendanceStatusConfirmedCount++;
+            else
+                activity.AttendanceStatusConfirmedCount++;
+
             await _repositoryManager.SaveAsync();
-            return _mapper.Map<SubscriberResponseModel>(tempActivity);
+            return _mapper.Map<SubscriberResponseModel>(subcriberTemp);
+
         }
 
         public async Task<SubscriberResponseModel> DeleteOneSubscriberAsync(SubscriberDeleteModel subscriber)
         {
-            //if(subscriber == null) throw new ArgumentNullException( nameof(subscriber));
-            //var check = await _repositoryManager.Subscriber.GetOneSubscriberAsync(subscriber.)
-            throw new NotImplementedException();
-            //sanırım burada biraz işler farklı olacak 
+            if(subscriber is null) throw new ArgumentNullException($"{nameof(subscriber)} cannot be null");
+            var activity = await _repositoryManager.Activity.GetOneActivityAsync(subscriber.ActivityId, true);
+            // subscriber'a ihtiyacım var modelleri(dto) çok yanlış oluşturmuşum. 
+            throw new Exception();
         }
 
         public async Task<List<SubscriberResponseModel>> GetAllSubscribersAsync(bool trackChanges)
@@ -59,6 +69,8 @@ namespace ActivityPlanner.Services
         {
             if (subscriber is null) throw new ArgumentNullException();
             var sub = await _repositoryManager.Subscriber.GetOneSubscriberAsync(subscriber.SubscriberId, true);
+            //misss gibi oldu :)
+            await _repositoryManager.Activity.ChangeActivityAttendanceStatusCountAsync(sub.ActivityId, sub.AttendanceStatus);
             await _repositoryManager.SaveAsync();
             return _mapper.Map<SubscriberResponseModel>(sub);
         }

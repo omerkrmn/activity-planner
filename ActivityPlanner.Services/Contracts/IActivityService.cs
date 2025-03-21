@@ -1,5 +1,6 @@
 ﻿using ActivityPlanner.Entities.DTOs.Activites;
 using ActivityPlanner.Entities.DTOs.Activity;
+using ActivityPlanner.Entities.Enums;
 using ActivityPlanner.Entities.Models;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,5 @@ namespace ActivityPlanner.Services.Contracts
         Task<ActivityResponseModel> DeleteOneActivitiyAsync(string userId,string activityName);
 
         Task<List<ActivityResponseModel>> GetAllActivitiesByUser(bool trackChanges, string userName);
-
     }
 }
