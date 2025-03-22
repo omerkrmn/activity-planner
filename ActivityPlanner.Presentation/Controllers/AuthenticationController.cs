@@ -1,6 +1,8 @@
 ﻿using ActivityPlanner.Entities.DTOs.Auth;
+using ActivityPlanner.Entities.Models.Mail;
 using ActivityPlanner.Services.Contracts;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -38,7 +40,6 @@ namespace ActivityPlanner.Presentation.Controllers
                 }
                 return BadRequest(ModelState);
             }
-
             return StatusCode(201);
         }
         [HttpPost("login")]
@@ -46,11 +47,9 @@ namespace ActivityPlanner.Presentation.Controllers
         {
             if (!await _service.AuthenticationService.ValidateUser(user))
                 return Unauthorized(); // 401
-
             var tokenDto = await _service
                 .AuthenticationService
                 .CreateToken(populateExp: true);
-
             return Ok(tokenDto);
         }
 
