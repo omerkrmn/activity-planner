@@ -18,6 +18,7 @@ namespace ActivityPlanner.API.Extensions
                     {
                         context.Response.StatusCode = contextFeature.Error switch
                         {
+                            ConflictException =>StatusCodes.Status409Conflict,
                             NotFoundException => StatusCodes.Status404NotFound,
                             _ => StatusCodes.Status500InternalServerError
                         };

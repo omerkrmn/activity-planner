@@ -16,7 +16,7 @@ namespace ActivityPlanner.Entities.Models
         [EmailAddress]
         public string SubscriberMail { get; set; } = string.Empty;
         public string MailValidation { get; set; } = string.Empty;
-        public AttendanceStatus AttendanceStatus { get; set; } = AttendanceStatus.Confirmed;
+        public AttendanceStatus AttendanceStatus { get; set; }
 
         public int ActivityId { get; set; }
         public Activity Activity { get; set; }

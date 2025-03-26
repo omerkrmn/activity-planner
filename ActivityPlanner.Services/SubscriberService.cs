@@ -1,5 +1,6 @@
 ﻿using ActivityPlanner.Entities.DTOs.Activity;
 using ActivityPlanner.Entities.DTOs.Subscriber;
+using ActivityPlanner.Entities.Exceptions;
 using ActivityPlanner.Entities.Models;
 using ActivityPlanner.Repositories.Contracts;
 using ActivityPlanner.Services.Contracts;
@@ -15,22 +16,40 @@ namespace ActivityPlanner.Services
 {
     public class SubscriberService(IRepositoryManager repositoryManager, IMapper mapper) : ISubscriberService
     {
-        private readonly IRepositoryManager _repositoryManager= repositoryManager;
-        private readonly IMapper _mapper= mapper;
+        private readonly IRepositoryManager _repositoryManager = repositoryManager;
+        private readonly IMapper _mapper = mapper;
 
 
         public async Task<SubscriberResponseModel> CreateOneSubscriberAsync(SubscriberCreateModel subscriber)
         {
             if (subscriber == null) throw new ArgumentNullException(nameof(subscriber));
+
+            var subscribers = await _repositoryManager.Subscriber
+            .GetAllSubscribersAsync(false);
+            var isAlreadySubscriber = subscribers
+                .Where(s => s.SubscriberMail == subscriber.SubscriberMail && s.ActivityId == subscriber.ActivityId)
+                .Any();
+            if (isAlreadySubscriber)
+                throw new ConflictException("This email address is already subscribed to this activity.");
+
             var subcriberTemp = _mapper.Map<Subscriber>(subscriber);
             _repositoryManager.Subscriber.CreateOneSubscriber(subcriberTemp);
 
             var activity = await _repositoryManager.Activity.GetOneActivityAsync(subscriber.ActivityId, true);
 
-            if (subscriber.AttendanceStatus == Entities.Enums.AttendanceStatus.Confirmed)
-                activity.AttendanceStatusConfirmedCount++;
-            else
-                activity.AttendanceStatusConfirmedCount++;
+            switch (subscriber.AttendanceStatus)
+            {
+                case Entities.Enums.AttendanceStatus.Confirmed:
+                    activity.AttendanceStatusConfirmedCount++;
+                    break;
+
+                case Entities.Enums.AttendanceStatus.Unsure:
+                    activity.AttendanceStatusUnsureCount++;
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(subscriber.AttendanceStatus), $"Unexpected AttendanceStatus value: {subscriber.AttendanceStatus}");
+            }
 
             await _repositoryManager.SaveAsync();
             return _mapper.Map<SubscriberResponseModel>(subcriberTemp);
@@ -39,7 +58,7 @@ namespace ActivityPlanner.Services
 
         public async Task<SubscriberResponseModel> DeleteOneSubscriberAsync(SubscriberDeleteModel subscriber)
         {
-            if(subscriber is null) throw new ArgumentNullException($"{nameof(subscriber)} cannot be null");
+            if (subscriber is null) throw new ArgumentNullException($"{nameof(subscriber)} cannot be null");
             var activity = await _repositoryManager.Activity.GetOneActivityAsync(subscriber.ActivityId, true);
             // subscriber'a ihtiyacım var modelleri(dto) çok yanlış oluşturmuşum. 
             throw new Exception();

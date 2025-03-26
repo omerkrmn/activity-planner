@@ -8,7 +8,7 @@ namespace ActivityPlanner.Entities.Enums
 {
     public enum AttendanceStatus
     {
-        Confirmed,
-        Unsure
+        Confirmed = 0,
+        Unsure = 1
     }
 }

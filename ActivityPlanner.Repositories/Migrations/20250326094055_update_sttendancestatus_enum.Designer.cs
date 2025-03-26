@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ActivityPlanner.Repositories.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20250318125953__init")]
-    partial class _init
+    [Migration("20250326094055_update_sttendancestatus_enum")]
+    partial class update_sttendancestatus_enum
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
