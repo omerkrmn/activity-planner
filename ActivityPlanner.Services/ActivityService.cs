@@ -15,16 +15,11 @@ using System.Threading.Tasks;
 
 namespace ActivityPlanner.Services
 {
-    public class ActivityService : IActivityService
+    public class ActivityService(IRepositoryManager repositoryManager, IMapper mapper) : IActivityService
     {
         //todo: dto ları burada kullanacaksın şuanlık bu şekilde kalsınlar daha sonra dtolara geç!
-        private readonly IRepositoryManager _repositoryManager;
-        private readonly IMapper _mapper;
-        public ActivityService(IRepositoryManager repositoryManager, IMapper mapper)
-        {
-            _repositoryManager = repositoryManager;
-            _mapper = mapper;
-        }
+        private readonly IRepositoryManager _repositoryManager = repositoryManager;
+        private readonly IMapper _mapper = mapper;
 
         public async Task<ActivityResponseModel> CreateOneActivitiyAsync(ActivityCreateRequestModel activity, string userId)
         {

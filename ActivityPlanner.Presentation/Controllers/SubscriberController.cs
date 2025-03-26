@@ -1,10 +1,7 @@
-﻿using ActivityPlanner.Services.Contracts;
+﻿using ActivityPlanner.Entities.DTOs.Subscriber;
+using ActivityPlanner.Services.Contracts;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ActivityPlanner.Presentation.Controllers
 {
@@ -12,15 +9,28 @@ namespace ActivityPlanner.Presentation.Controllers
     [ApiController]
     [Route("[controller]")]
 
-    public class SubscriberController : ControllerBase
+    public class SubscriberController(IServiceManager service) : ControllerBase
     {
-        private readonly IServiceManager _service;
+        private readonly IServiceManager _service = service;
 
-        public SubscriberController(IServiceManager service)
+        [HttpPost()]
+        public async Task<IActionResult> CreateSubscriber([FromBody] SubscriberCreateModel subscriberCreateModel)
         {
-            _service = service;
+            var response = await _service.SubscriberService.CreateOneSubscriberAsync(subscriberCreateModel);
+            return StatusCode(StatusCodes.Status201Created, response);
+        }
+        [HttpPut]
+        public async Task<IActionResult> UpdateSubscribe(SubscriberUpdateModel subscriberUpdateModel)
+        {
+            var response = await _service.SubscriberService.UpdateOneSubscriberAsync(subscriberUpdateModel);
+            return StatusCode(StatusCodes.Status201Created, response);
+        }
+        [HttpDelete]
+        public async Task<IActionResult> DeleteSubscribe(SubscriberDeleteModel subscriberDeleteModel)
+        {
+            await _service.SubscriberService.DeleteOneSubscriberAsync(subscriberDeleteModel);
+            return NoContent();
         }
 
-      
     }
 }

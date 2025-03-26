@@ -13,17 +13,11 @@ using System.Threading.Tasks;
 
 namespace ActivityPlanner.Services
 {
-    public class SubscriberService : ISubscriberService
+    public class SubscriberService(IRepositoryManager repositoryManager, IMapper mapper) : ISubscriberService
     {
-        private readonly IRepositoryManager _repositoryManager;
-        private readonly IMapper _mapper;
+        private readonly IRepositoryManager _repositoryManager= repositoryManager;
+        private readonly IMapper _mapper= mapper;
 
-
-        public SubscriberService(IRepositoryManager repositoryManager, IMapper mapper)
-        {
-            _repositoryManager = repositoryManager;
-            _mapper = mapper;
-        }
 
         public async Task<SubscriberResponseModel> CreateOneSubscriberAsync(SubscriberCreateModel subscriber)
         {

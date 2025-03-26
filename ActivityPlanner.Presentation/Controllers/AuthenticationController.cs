@@ -17,13 +17,9 @@ namespace ActivityPlanner.Presentation.Controllers
     [ApiController]
     [Route("[controller]")]
 
-    public class AuthenticationController : ControllerBase
+    public class AuthenticationController(IServiceManager service) : ControllerBase
     {
-        private readonly IServiceManager _service;
-        public AuthenticationController(IServiceManager service)
-        {
-            _service = service;
-        }
+        private readonly IServiceManager _service = service;
 
         [HttpPost]
         public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto userForRegistrationDto)
@@ -46,7 +42,7 @@ namespace ActivityPlanner.Presentation.Controllers
         public async Task<IActionResult> Authenticate([FromBody] UserForAuthenticationDto user)
         {
             if (!await _service.AuthenticationService.ValidateUser(user))
-                return Unauthorized(); // 401
+                return Unauthorized();
             var tokenDto = await _service
                 .AuthenticationService
                 .CreateToken(populateExp: true);

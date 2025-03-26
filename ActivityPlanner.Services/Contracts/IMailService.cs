@@ -9,6 +9,6 @@ namespace ActivityPlanner.Services.Contracts
 {
     public interface IMailService
     {
-        public void Send(MailSendModel mailSendModel);
+        public Task SendEmailAsync(string ToEmail, string Subject, string Body, bool IsBodyHtml = false);
     }
 }

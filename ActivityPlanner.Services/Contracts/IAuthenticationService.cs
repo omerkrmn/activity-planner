@@ -1,4 +1,5 @@
 ﻿using ActivityPlanner.Entities.DTOs.Auth;
+using ActivityPlanner.Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace ActivityPlanner.Services.Contracts
         Task<bool> ValidateUser(UserForAuthenticationDto userForAuthDto);
         Task<TokenDto> CreateToken(bool populateExp);
         Task<TokenDto> RefreshToken(TokenDto tokenDto);
+        //Task<AppUser> FindByEmailAsync(string email);
 
     }
 }

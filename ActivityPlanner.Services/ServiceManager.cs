@@ -21,7 +21,7 @@ namespace ActivityPlanner.Services
             _activityService = new Lazy<IActivityService>(() => new ActivityService(repositoryManager, mapper));
             _subscriberService = new Lazy<ISubscriberService>(() => new SubscriberService(repositoryManager, mapper));
             _authenticationService = new Lazy<IAuthenticationService>(() => new AuthenticationService(mapper, userManager, configuration));
-            _mailService = new Lazy<IMailService>(()=>new MailService(configuration));
+            _mailService = new Lazy<IMailService>(()=>new MailService(configuration,userManager));
         }
         public IActivityService ActivityService => _activityService.Value;
         public IAuthenticationService AuthenticationService => _authenticationService.Value;

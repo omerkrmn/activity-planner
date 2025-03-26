@@ -13,28 +13,10 @@ namespace ActivityPlanner.Presentation.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ActivityController : ControllerBase
+    public class ActivityController(IServiceManager service) : ControllerBase
     {
-        private readonly IServiceManager _service;
+        private readonly IServiceManager _service=service;
 
-        public ActivityController(IServiceManager service)
-        {
-            _service = service;
-        }
-
-        [Authorize]
-        [HttpGet]
-        public async Task<IActionResult> GetAllActivity()
-        {
-            var subscribers = await _service.ActivityService.GetAllActivitiesAsync(false);
-            return Ok(subscribers);
-        }
-        [HttpGet("{userName}")]
-        public async Task<IActionResult> GetAllActivityByUserName([FromRoute] string userName)
-        {
-            var activities = await _service.ActivityService.GetAllActivitiesByUser(false, userName);
-            return Ok(activities);
-        }
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateActivity([FromBody] ActivityCreateRequestModel requestModel)
@@ -45,7 +27,7 @@ namespace ActivityPlanner.Presentation.Controllers
             return Ok(response);
         }
         [HttpGet("{userName}/{activityName}")]
-        public async Task<IActionResult> GetActivityByShortLink([FromRoute] string userName, [FromRoute] string activityName)
+        public async Task<IActionResult> GetOneActivity([FromRoute] string userName, [FromRoute] string activityName)
         {
             var activity = await _service.ActivityService.GetOneActivityAsync(userName, activityName);
             if (activity == null)
@@ -59,8 +41,8 @@ namespace ActivityPlanner.Presentation.Controllers
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId is null)
                 return Unauthorized();
-            var activity = await _service.ActivityService.DeleteOneActivitiyAsync(userId,activityName);
-            return Ok(activity);
+            await _service.ActivityService.DeleteOneActivitiyAsync(userId,activityName);
+            return NoContent();
         }
     }
 }

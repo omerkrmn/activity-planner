@@ -12,20 +12,13 @@ using System.Text;
 
 namespace ActivityPlanner.Services
 {
-    public class AuthenticationService : IAuthenticationService
+    public class AuthenticationService(IMapper mapper, UserManager<AppUser> userManager, IConfiguration configuration) : IAuthenticationService
     {
-        private readonly IMapper _mapper;
-        private readonly UserManager<AppUser> _userManager;
-        private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper=mapper;
+        private readonly UserManager<AppUser> _userManager= userManager;
+        private readonly IConfiguration _configuration= configuration;
 
         private AppUser? _user;
-
-        public AuthenticationService(IMapper mapper, UserManager<AppUser> userManager, IConfiguration configuration)
-        {
-            _mapper = mapper;
-            _userManager = userManager;
-            _configuration = configuration;
-        }
 
         public async Task<TokenDto> CreateToken(bool populateExp)
         {

@@ -15,9 +15,22 @@ namespace ActivityPlanner.API.Extensions
     public static class ServicesExtensions
     {
         // for db connection
-        public static void ConfigureSqlContext(this IServiceCollection services,
-                    IConfiguration configuration) => services.AddDbContext<RepositoryContext>(options =>
-                            options.UseSqlServer(configuration.GetConnectionString("sqlConnection")));
+        //public static void ConfigureSqlContext(this IServiceCollection services,
+        //            IConfiguration configuration) => services.AddDbContext<RepositoryContext>(options =>
+        //                    options.UseSqlServer(configuration.GetConnectionString("sqlConnection")));
+        public static void ConfigureSqlContext(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddDbContext<RepositoryContext>(options =>
+                options.UseSqlServer(configuration.GetConnectionString("sqlConnection"), sqlOptions =>
+                {
+                    sqlOptions.EnableRetryOnFailure(
+                        maxRetryCount: 5, // Maksimum 5 kez yeniden deneme
+                        maxRetryDelay: TimeSpan.FromSeconds(5), // Her deneme arasında 5 saniye bekleme
+                        errorNumbersToAdd: null // Belirli hata kodları eklemek istersen buraya yazabilirsin
+                    );
+                }));
+        }
+
         public static void ConfigureRepositoryManager(this IServiceCollection services) =>
        services.AddScoped<IRepositoryManager, RepositoryManager>();
 

@@ -1,39 +1,45 @@
 ﻿using ActivityPlanner.Entities.Models.Mail;
 using ActivityPlanner.Services.Contracts;
-using MailKit.Net.Smtp;
-using MailKit.Security;
 using Microsoft.Extensions.Configuration;
-using MimeKit;
-using MimeKit.Text;
-using static Org.BouncyCastle.Math.EC.ECCurve;
+using System.Net.Mail;
+using System.Net;
+using ActivityPlanner.Entities.Models;
+using Microsoft.AspNetCore.Identity;
 namespace ActivityPlanner.Services
 {
-    public class MailService : IMailService
+    public class MailService(IConfiguration configuration, UserManager<AppUser> userManager) : IMailService
     {
-        private readonly IConfiguration _configuration;
+        private readonly IConfiguration _configuration= configuration;
+        private readonly UserManager<AppUser> _userManager=userManager;
 
-        public MailService(IConfiguration configuration)
+       
+        public Task SendEmailAsync(string ToEmail, string Subject, string Body, bool IsBodyHtml = false)
         {
-            _configuration = configuration;
-        }
+            string? MailServer = _configuration["EmailSettings:MailServer"];
+            string? FromEmail = _configuration["EmailSettings:FromEmail"];
+            string? Password = _configuration["EmailSettings:Password"];
+            string? SenderName = _configuration["EmailSettings:SenderName"];
 
-        public void Send(MailSendModel mailSendModel)
-        {
-            var email = new MimeMessage();
-            email.From.Add(MailboxAddress.Parse(_configuration.GetSection("EmailUsername").Value));
-            email.To.Add(MailboxAddress.Parse(mailSendModel.To));
-            email.Subject=mailSendModel.Subject;
-            email.Body = new TextPart(TextFormat.Html) 
+            int Port = Convert.ToInt32(_configuration["EmailSettings:MailPort"]);
+            var client = new SmtpClient(MailServer, Port)
             {
-                Text=mailSendModel.Body
+                Credentials = new NetworkCredential(FromEmail, Password),
+                EnableSsl = true,
             };
-            using (var smtp = new SmtpClient())
+
+            MailAddress fromAddress = new MailAddress(FromEmail, SenderName);
+
+            MailMessage mailMessage = new MailMessage
             {
-                smtp.Connect(_configuration.GetSection("EmailHost").Value, 587, SecureSocketOptions.StartTls);
-                smtp.Authenticate(_configuration.GetSection("EmailUsername").Value, _configuration.GetSection("EmailPassword").Value);
-                smtp.Send(email);
-                smtp.Disconnect(true);
-            }
+                From = fromAddress, 
+                Subject = Subject,
+                Body = Body,
+                IsBodyHtml = IsBodyHtml
+            };
+
+            mailMessage.To.Add(ToEmail);
+
+            return client.SendMailAsync(mailMessage);
         }
     }
 }
