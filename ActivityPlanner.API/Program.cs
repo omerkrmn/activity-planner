@@ -19,6 +19,8 @@ builder.Services.ConfigureServiceManager();
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.ConfigureIdentity();
 builder.Services.ConfigureJWT(builder.Configuration);
+builder.Services.ConfigureRedisService(builder.Configuration);
+
 var app = builder.Build();
 app.ConfigureExceptionHandler();
 app.UseCors("MyAllowSpecificOrigins");

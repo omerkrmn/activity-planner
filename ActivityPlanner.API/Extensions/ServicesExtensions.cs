@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using StackExchange.Redis;
 
 namespace ActivityPlanner.API.Extensions
 {
@@ -74,6 +75,14 @@ namespace ActivityPlanner.API.Extensions
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
                 }
             );
+        }
+
+        public static void ConfigureRedisService(this IServiceCollection services, IConfiguration configuration)
+        {
+            var redisConnectionString = configuration.GetValue<string>("RedisConnectionString");
+            var redis = ConnectionMultiplexer.Connect(redisConnectionString);
+            services.AddSingleton<IConnectionMultiplexer>(redis);
+            services.AddSingleton<IRedisCacheService, RedisCacheService>();
         }
 
     }
