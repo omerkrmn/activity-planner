@@ -1,4 +1,7 @@
 ﻿using ActivityPlanner.Entities.DTOs.Activites;
+using ActivityPlanner.Entities.DTOs.Activity;
+using ActivityPlanner.Entities.Models;
+using ActivityPlanner.Services;
 using ActivityPlanner.Services.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +16,7 @@ namespace ActivityPlanner.Presentation.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ActivityController(IServiceManager service) : ControllerBase
+    public class ActivityController(IServiceManager service, IRedisCacheService redisCacheService) : ControllerBase
     {
         private readonly IServiceManager _service=service;
 
@@ -21,6 +24,9 @@ namespace ActivityPlanner.Presentation.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateActivity([FromBody] ActivityCreateRequestModel requestModel)
         {
+            if(!ModelState.IsValid)
+                throw new ArgumentNullException(nameof(requestModel));
+
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null) return Unauthorized();
             var response = await _service.ActivityService.CreateOneActivitiyAsync(requestModel, userId);
@@ -29,9 +35,16 @@ namespace ActivityPlanner.Presentation.Controllers
         [HttpGet("{userName}/{activityName}")]
         public async Task<IActionResult> GetOneActivity([FromRoute] string userName, [FromRoute] string activityName)
         {
+            var cacheKey = $"activity:{userName}:{activityName}";
+            var cachedActivity = await _service.RedisCacheService.GetCacheAsync<ActivityResponseModel>(cacheKey);
+            
+            if (cachedActivity != null)
+                return Ok(cachedActivity);
+
             var activity = await _service.ActivityService.GetOneActivityAsync(userName, activityName);
             if (activity == null)
                 return NotFound();
+            await _service.RedisCacheService.SetCacheAsync(cacheKey, activity, TimeSpan.FromMinutes(30)); // 30 dakika cache süresi
             return Ok(activity);
         }
         [Authorize]
