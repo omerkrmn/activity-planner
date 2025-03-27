@@ -12,5 +12,6 @@ namespace ActivityPlanner.Services.Contracts
         ISubscriberService SubscriberService { get; }
         IAuthenticationService AuthenticationService {  get; }
         IMailService MailService { get; }
+        IRedisCacheService RedisCacheService { get; }
     }
 }
