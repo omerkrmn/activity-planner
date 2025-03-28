@@ -24,7 +24,7 @@ namespace ActivityPlanner.Services
         public async Task SetCacheAsync<T>(string key, T value, TimeSpan? expirationTime = null)
         {
             var serializedValue = JsonSerializer.Serialize(value);
-            var expiration = expirationTime ?? TimeSpan.FromMinutes(30);
+            var expiration = expirationTime ?? TimeSpan.FromSeconds(10);
 
             await _database.StringSetAsync(key, serializedValue, expiration);
         }

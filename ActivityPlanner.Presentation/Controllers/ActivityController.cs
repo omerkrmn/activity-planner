@@ -44,7 +44,7 @@ namespace ActivityPlanner.Presentation.Controllers
             var activity = await _service.ActivityService.GetOneActivityAsync(userName, activityName);
             if (activity == null)
                 return NotFound();
-            await _service.RedisCacheService.SetCacheAsync(cacheKey, activity, TimeSpan.FromMinutes(30)); // 30 dakika cache süresi
+            await _service.RedisCacheService.SetCacheAsync(cacheKey, activity, TimeSpan.FromSeconds(10));
             return Ok(activity);
         }
         [Authorize]

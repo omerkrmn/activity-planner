@@ -19,6 +19,13 @@ namespace ActivityPlanner.Repositories.EFcore
         {
             base.OnModelCreating(builder);
 
+            builder.Entity<Activity>()
+                .Property(a => a.CreatedAt)
+                .HasDefaultValueSql("getdate()");
+
+            builder.Entity<Subscriber>()
+               .Property(s => s.CreatedAt)
+              .HasDefaultValueSql("getdate()");
 
             builder.Entity<Activity>()
                 .HasOne(u => u.AppUser)

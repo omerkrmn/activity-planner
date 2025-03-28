@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ActivityPlanner.Repositories.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20250326094055_update_sttendancestatus_enum")]
-    partial class update_sttendancestatus_enum
+    [Migration("20250328120411__init")]
+    partial class _init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -52,7 +52,9 @@ namespace ActivityPlanner.Repositories.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<DateTime>("LastRegistrationDate")
                         .HasColumnType("datetime2");
@@ -159,7 +161,9 @@ namespace ActivityPlanner.Repositories.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<DateTime>("LastUpdatedAt")
                         .HasColumnType("datetime2");
