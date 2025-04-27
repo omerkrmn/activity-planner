@@ -8,9 +8,13 @@
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist\ActivityPlanner.Frontend\browser\</BuildOutputFolder>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="src\features\" />
-    <Folder Include="src\core\" />
-    <Folder Include="src\layouts\" />
-    <Folder Include="src\shared\" />
+    <None Remove="src\core\**" />
+    <None Remove="src\features\**" />
+    <None Remove="src\layouts\**" />
+    <None Remove="src\shared\**" />
+    <TypeScriptConfiguration Remove="src\core\**" />
+    <TypeScriptConfiguration Remove="src\features\**" />
+    <TypeScriptConfiguration Remove="src\layouts\**" />
+    <TypeScriptConfiguration Remove="src\shared\**" />
   </ItemGroup>
 </Project>
