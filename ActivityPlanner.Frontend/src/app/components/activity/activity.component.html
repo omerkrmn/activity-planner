@@ -1,8 +1,51 @@
-<ul>
-    <li>id : <b>{{activity?.id}}</b></li>
-    <li>appUserId : <b>{{activity?.appUserId}}</b></li>
-    <li>name : {{activity?.activityName}}</li>
-    <li>activityDescription : <b>{{activity?.activityDescription}}</b></li>
-    <li>attendanceStatusConfirmedCount : <b>{{activity?.attendanceStatusConfirmedCount}}</b></li>
-    <li>attendanceStatusUnsureCount : <b>{{activity?.attendanceStatusUnsureCount}}</b></li>
-</ul>
+<div class="container my-5">
+    <div class="row">
+        <div class="col align-self-center text-center h-50 d-inline-block">
+            <div class="card d-inline-block" style="width: 40rem;">
+                <div class="card-header">
+                    <h2 class="text-primary text-start p-3">{{ activity?.activityName | titlecase }}</h2>
+                </div>
+                <div class="card-body">
+                    <p class="card-text text-start">{{ activity?.activityDescription | titlecase }}</p>
+                    <div class="text-end">
+                        <span>Confirmed : {{ activity?.attendanceStatusConfirmedCount }}</span><br>
+                        <span>Unsure : {{ activity?.attendanceStatusUnsureCount }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col align-self-center text-center h-50 d-inline-block">
+            <div class="card d-inline-block" style="width: 40rem;">
+                <form action="">
+                    <div class="card-header mb-3">
+                        <h3 class="text-start p-3 text-primary">Katılım Formu</h3>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+                        <div class="col-sm-10">
+                            <input type="email" class="form-control" id="inputEmail3">
+                        </div>
+                    </div>
+                    <div class="form-check text-start mx-3">
+                        <input class="form-check-input" checked type="radio" name="radioDefault" id="radioDefault1">
+                        <label class="form-check-label" for="radioDefault1">
+                            Katılıyorum
+                        </label>
+                    </div>
+                    <div class="form-check text-start mx-3">
+                        <input class="form-check-input" type="radio" name="radioDefault" id="radioDefault2">
+                        <label class="form-check-label" for="radioDefault2">
+                            Emin Değilim
+                        </label>
+                    </div>
+                    <div class="">
+                        <button type="submit" class="btn btn-success ">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -5,7 +5,7 @@ import { LoginComponent } from './pages/login/login.component';
 
 const routes: Routes = [
   {
-    path: 'activity',
+    path: 'activity/:username/:activityname',
     component: ActivityComponent
   },{
     path: 'login',
