@@ -8,7 +8,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddCors(opt => opt.AddPolicy(name: "MyAllowSpecificOrigins",
     policy => 
     {
-        policy.AllowAnyOrigin();
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
     }
     ));
 //builder.Services.AddSwaggerGen();
