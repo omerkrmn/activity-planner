@@ -8,13 +8,21 @@
                 <div class="card-body">
                     <p class="card-text text-start">{{ activity?.activityDescription | titlecase }}</p>
                     <div class="text-end">
-                        <span>Confirmed : {{ activity?.attendanceStatusConfirmedCount }}</span><br>
-                        <span>Unsure : {{ activity?.attendanceStatusUnsureCount }}</span>
+                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="Kesin olarak Katılacak Kullanıcı sayısı.">
+                            <i class="bi bi-check-circle text-success me-1"></i>
+                            Confirmed: {{ activity?.attendanceStatusConfirmedCount }}
+                        </span><br>
+                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="Kararsız olan kullanıcı sayısını belirtir.">
+                            <i class="bi bi-question-circle text-warning me-1"></i>
+                            Unsure: {{ activity?.attendanceStatusUnsureCount }}
+                        </span>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 
     <div class="row mt-5">
         <div class="col align-self-center text-center h-50 d-inline-block">
