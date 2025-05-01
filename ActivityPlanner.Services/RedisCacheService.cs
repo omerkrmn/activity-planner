@@ -32,7 +32,6 @@ namespace ActivityPlanner.Services
         public async Task<T> GetCacheAsync<T>(string key)
         {
             var cachedValue = await _database.StringGetAsync(key);
-
             if (cachedValue.IsNullOrEmpty)
                 return default;
 

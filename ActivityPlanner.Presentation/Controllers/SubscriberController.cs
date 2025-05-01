@@ -13,7 +13,7 @@ namespace ActivityPlanner.Presentation.Controllers
     {
         private readonly IServiceManager _service = service;
 
-        [HttpPost()]
+        [HttpPost]
         public async Task<IActionResult> CreateSubscriber([FromBody] SubscriberCreateModel subscriberCreateModel)
         {
             var response = await _service.SubscriberService.CreateOneSubscriberAsync(subscriberCreateModel);

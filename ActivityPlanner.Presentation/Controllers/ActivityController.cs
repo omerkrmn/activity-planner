@@ -16,7 +16,7 @@ namespace ActivityPlanner.Presentation.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ActivityController(IServiceManager service, IRedisCacheService redisCacheService) : ControllerBase
+    public class ActivityController(IServiceManager service/*, IRedisCacheService redisCacheService*/) : ControllerBase
     {
         private readonly IServiceManager _service=service;
 
@@ -35,16 +35,16 @@ namespace ActivityPlanner.Presentation.Controllers
         [HttpGet("{userName}/{activityName}")]
         public async Task<IActionResult> GetOneActivity([FromRoute] string userName, [FromRoute] string activityName)
         {
-            var cacheKey = $"activity:{userName}:{activityName}";
-            var cachedActivity = await _service.RedisCacheService.GetCacheAsync<ActivityResponseModel>(cacheKey);
+            //var cacheKey = $"activity:{userName}:{activityName}";
+            //var cachedActivity = await _service.RedisCacheService.GetCacheAsync<ActivityResponseModel>(cacheKey);
             
-            if (cachedActivity != null)
-                return Ok(cachedActivity);
+            //if (cachedActivity != null)
+            //    return Ok(cachedActivity);
 
             var activity = await _service.ActivityService.GetOneActivityAsync(userName, activityName);
             if (activity == null)
                 return NotFound();
-            await _service.RedisCacheService.SetCacheAsync(cacheKey, activity, TimeSpan.FromSeconds(10));
+            //await _service.RedisCacheService.SetCacheAsync(cacheKey, activity, TimeSpan.FromSeconds(10));
             return Ok(activity);
         }
         [Authorize]
