@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private authService: AuthService,private router: Router) { }
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -27,15 +27,17 @@ export class LoginComponent implements OnInit {
       const loginData = this.loginForm.value;
       this.authService.login(loginData).subscribe(
         (response) => {
-          this.authService.saveToken(response.token);
-          this.router.navigate(['/activity/Omer/Test2']);
+          console.log(response);
+
+          this.authService.saveToken(response.accessToken);
+          this.router.navigate(['/home']);
           console.log('Giriş başarılı:', response);
-          
+
         },
         (error) => {
           console.error('Giriş hatası:', error);
         }
-      );  
+      );
 
     } else {
       console.log('Form geçerli değil');

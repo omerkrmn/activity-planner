@@ -15,6 +15,16 @@ export class AuthService {
     console.log(this.baseUrl);
     return this.http.post<any>(this.baseUrl, loginData);
   }
+  isLoggedIn(): boolean {
+    return !!localStorage.getItem('access_token');
+  }
+  logOut(): boolean {
+    if (this.isLoggedIn()) {
+      this.removeToken();
+      return true;
+    }
+    return false;
+  }
   saveToken(token: string): void {
     localStorage.setItem('access_token', token);
   }

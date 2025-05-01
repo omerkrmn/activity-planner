@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
         <!-- Brand/Logo -->
-        <a class="navbar-brand" href="#">SmartCertify</a>
+        <a class="navbar-brand" href="#">Activity Planner</a>
 
         <!-- Toggler for responsive design -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -11,6 +11,7 @@
 
         <!-- Navbar Links -->
         <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- Main Links -->
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                     <a class="nav-link" [routerLink]="['/home']" routerLinkActive="active"
@@ -21,15 +22,17 @@
                         [routerLinkActiveOptions]="{ exact: true }">Activity</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" [routerLink]="['/login']" routerLinkActive="active"
-                        [routerLinkActiveOptions]="{ exact: true }">Login</a>
-                </li>
-                <!-- About and Contact -->
-                <li class="nav-item">
                     <a class="nav-link" [routerLink]="['/about']" routerLinkActive="active">About</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" [routerLink]="['/contact-us']" routerLinkActive="active">Contact Us</a>
+                </li>
+            </ul>
+            <!-- Login Link (Sola yerleştirildi) -->
+            <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
+                <li class="nav-item" *ngIf="!isLoggedIn">
+                    <a class="nav-link" [routerLink]="['/login']" routerLinkActive="active"
+                        [routerLinkActiveOptions]="{ exact: true }">Login</a>
                 </li>
             </ul>
         </div>

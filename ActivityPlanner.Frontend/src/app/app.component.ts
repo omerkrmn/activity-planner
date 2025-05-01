@@ -19,7 +19,6 @@ export class AppComponent implements OnInit {
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
       const currentUrl = event.urlAfterRedirects;
-      // Eğer belirli bir URL varsa, navbar ve footer'ı gizle
       this.showNavbarAndFooter = !currentUrl.includes('/activity');
     });
   }

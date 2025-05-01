@@ -9,7 +9,8 @@ import { FooterComponent } from './pages/footer/footer.component';
 import { HeaderComponent } from './pages/header/header.component';
 import { SignupComponent } from './pages/signup/signup.component';
 import { LoginComponent } from './pages/login/login.component';
-import { ReactiveFormsModule } from '@angular/forms'; // Eklendi
+import { ReactiveFormsModule } from '@angular/forms';
+import { HomeComponent } from './components/home/home.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { ReactiveFormsModule } from '@angular/forms'; // Eklendi
     FooterComponent,
     HeaderComponent,
     SignupComponent,
-    LoginComponent,    
+    LoginComponent,
+    HomeComponent,
   ],
   imports: [
     BrowserModule,
