@@ -4,6 +4,7 @@ import { ActivityComponent } from './components/activity/activity.component';
 import { LoginComponent } from './pages/login/login.component';
 import { NoAuthGuard } from './guards/auth.guard';
 import { HomeComponent } from './components/home/home.component';
+import { SignupComponent } from './pages/signup/signup.component';
 
 const routes: Routes = [
   {
@@ -17,8 +18,8 @@ const routes: Routes = [
     path: 'activity',
     component: ActivityComponent
   }, {
-    path: 'activity',
-    component: ActivityComponent
+    path: 'signup',
+    component: SignupComponent
   }
   , {
     path: 'home',

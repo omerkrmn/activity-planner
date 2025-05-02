@@ -12,7 +12,11 @@ import { Router } from '@angular/router';
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) { }
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -21,7 +25,6 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  // Login işlemi yapılacak fonksiyon
   onLogin(): void {
     if (this.loginForm.valid) {
       const loginData = this.loginForm.value;

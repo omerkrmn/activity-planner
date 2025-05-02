@@ -1,3 +1,59 @@
-<div class="w-100">
+<div class="container vh-100 d-flex align-items-center justify-content-center">
+    <div class="container-fluid h-custom">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-md-9 col-lg-6 col-xl-5">
+                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
+                    class="img-fluid" alt="Sample image" />
+            </div>
+            <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+                <form [formGroup]="signUpForm" (ngSubmit)="onSignUp()">
 
+                    <div class="form-outline mb-4">
+                        <input type="text" id="firstName" formControlName="firstName"
+                            class="form-control form-control-lg" placeholder="Adınızı girin" />
+                        <label class="form-label" for="firstName">Ad</label>
+                    </div>
+
+                    <div class="form-outline mb-4">
+                        <input type="text" id="lastName" formControlName="lastName" class="form-control form-control-lg"
+                            placeholder="Soyadınızı girin" />
+                        <label class="form-label" for="lastName">Soyad</label>
+                    </div>
+
+                    <div class="form-outline mb-4">
+                        <input type="email" id="email" formControlName="email" class="form-control form-control-lg"
+                            placeholder="Email adresinizi girin" />
+                        <label class="form-label" for="email">Email</label>
+                    </div>
+
+                    <div class="form-outline mb-4">
+                        <input type="text" id="userName" formControlName="userName" class="form-control form-control-lg"
+                            placeholder="Kullanıcı adınızı girin" />
+                        <label class="form-label" for="userName">Kullanıcı Adı</label>
+                    </div>
+
+                    <div class="form-outline mb-3">
+                        <input type="password" id="password" formControlName="password"
+                            class="form-control form-control-lg" placeholder="Şifrenizi girin" />
+                        <label class="form-label" for="password">Şifre</label>
+                    </div>
+
+                    <div class="form-outline mb-3">
+                        <input type="tel" id="phoneNumber" formControlName="phoneNumber"
+                            class="form-control form-control-lg" placeholder="Telefon numaranızı girin" />
+                        <label class="form-label" for="phoneNumber">Telefon No</label>
+                    </div>
+
+                    <div class="text-center text-lg-start mt-4 pt-2">
+                        <button type="submit" class="btn btn-primary btn-lg px-5">Giriş Yap</button>
+                        <p class="small fw-bold mt-2 pt-1 mb-0">
+                            Zaten Hesabın Var mı?
+                            <a [routerLink]="['/login']" class="link-danger">Giriş Yap</a>
+                        </p>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
 </div>

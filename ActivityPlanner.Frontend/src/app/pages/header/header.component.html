@@ -19,7 +19,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" [routerLink]="['/activity']" routerLinkActive="active"
-                        [routerLinkActiveOptions]="{ exact: true }">Activity</a>
+                        [routerLinkActiveOptions]="{ exact: true }">My Activities</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" [routerLink]="['/about']" routerLinkActive="active">About</a>
@@ -31,8 +31,15 @@
             <!-- Login Link (Sola yerleştirildi) -->
             <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
                 <li class="nav-item" *ngIf="!isLoggedIn">
+                    <a class="nav-link" [routerLink]="['/signup']" routerLinkActive="active"
+                        [routerLinkActiveOptions]="{ exact: true }">Signup</a>
+                </li>
+                <li class="nav-item" *ngIf="!isLoggedIn">
                     <a class="nav-link" [routerLink]="['/login']" routerLinkActive="active"
                         [routerLinkActiveOptions]="{ exact: true }">Login</a>
+                </li>
+                <li class="nav-item" *ngIf="isLoggedIn">
+                    <a class="nav-link" (click)="logout()" style="cursor: pointer;">Exit</a>
                 </li>
             </ul>
         </div>
