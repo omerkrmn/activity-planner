@@ -18,13 +18,10 @@
 
 ## 📁 Proje Yapısı
 
-## 📁 Proje Yapısı
-
-```bash
-├── [ActivityPlanner.API](https://github.com/omerkrmn/activity-planner/tree/main/ActivityPlanner.API)             # Web API uygulamasının giriş noktası
-├── [ActivityPlanner.Entities](https://github.com/omerkrmn/activity-planner/tree/main/ActivityPlanner.Entities)   # Veri modelleri ve DTO tanımlamaları
-├── [ActivityPlanner.Presentation](https://github.com/omerkrmn/activity-planner/tree/main/ActivityPlanner.Presentation) # Controller'lar ve HTTP endpoint'leri
-├── [ActivityPlanner.Repositories](https://github.com/omerkrmn/REPO_ADI/tree/main/ActivityPlanner.Repositories) # Veri erişim katmanı (EF Core)
-├── [ActivityPlanner.Service](https://github.com/omerkrmn/activity-planner/tree/main/ActivityPlanner.Service)     # Uygulamanın iş mantığı ve servis katmanı
-├── [ActivityPlanner.Frontend](https://github.com/omerkrmn/activity-planner/tree/main/ActivityPlanner.Frontend)   # Angular tabanlı istemci uygulama
-├── [ActivityPlanner.Test](https://github.com/omerkrmn/activity-planner/tree/main/ActivityPlanner.Test)           # Birim test projeleri
+- [**ActivityPlanner.API**](https://github.com/omerkrmn/activity-planner/tree/main/ActivityPlanner.API): Web API uygulamasının giriş noktası  
+- [**ActivityPlanner.Entities**](https://github.com/omerkrmn/activity-planner/tree/main/ActivityPlanner.Entities): Veri modelleri ve DTO tanımlamaları  
+- [**ActivityPlanner.Presentation**](https://github.com/omerkrmn/activity-planner/tree/main/ActivityPlanner.Presentation): Controller'lar ve HTTP endpoint'leri  
+- [**ActivityPlanner.Repositories**](https://github.com/omerkrmn/activity-planner/tree/main/ActivityPlanner.Repositories): Veri erişim katmanı (EF Core)  
+- [**ActivityPlanner.Services**](https://github.com/omerkrmn/activity-planner/tree/main/ActivityPlanner.Services): Uygulamanın iş mantığı ve servis katmanı  
+- [**ActivityPlanner.Frontend**](https://github.com/omerkrmn/activity-planner/tree/main/ActivityPlanner.Frontend): Angular tabanlı istemci uygulama  
+- [**ActivityPlanner.Test**](https://github.com/omerkrmn/activity-planner/tree/main/ActivityPlanner.Test): Birim test projeleri  
