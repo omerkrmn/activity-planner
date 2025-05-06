@@ -17,7 +17,6 @@ namespace ActivityPlanner.Services
 {
     public class ActivityService(IRepositoryManager repositoryManager, IMapper mapper) : IActivityService
     {
-        //todo: dto ları burada kullanacaksın şuanlık bu şekilde kalsınlar daha sonra dtolara geç!
         private readonly IRepositoryManager _repositoryManager = repositoryManager;
         private readonly IMapper _mapper = mapper;
 

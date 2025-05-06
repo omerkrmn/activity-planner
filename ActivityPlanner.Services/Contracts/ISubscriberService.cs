@@ -15,5 +15,7 @@ namespace ActivityPlanner.Services.Contracts
         Task<SubscriberResponseModel> CreateOneSubscriberAsync(SubscriberCreateModel subscriber);
         Task<SubscriberResponseModel> UpdateOneSubscriberAsync(SubscriberUpdateModel subscriber);
         Task<SubscriberResponseModel> DeleteOneSubscriberAsync(SubscriberDeleteModel subscriber);
+
+        Task<List<SubscriberResponseModel>> GetAllSubscribersByActivityAsync(int activityId,bool trackChanges);
     }
 }

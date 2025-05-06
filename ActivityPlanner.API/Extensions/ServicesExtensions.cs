@@ -22,7 +22,7 @@ namespace ActivityPlanner.API.Extensions
         public static void ConfigureSqlContext(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<RepositoryContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("sqlConnection"), sqlOptions =>
+                options.UseSqlServer(configuration.GetConnectionString("sqlConnectionLocal"), sqlOptions =>
                 {
                     sqlOptions.EnableRetryOnFailure(
                         maxRetryCount: 5, // Maksimum 5 kez yeniden deneme

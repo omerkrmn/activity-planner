@@ -12,6 +12,15 @@ namespace ActivityPlanner.Presentation.Controllers
     public class SubscriberController(IServiceManager service) : ControllerBase
     {
         private readonly IServiceManager _service = service;
+        [HttpGet]
+        public async Task<IActionResult> GetAllSubscriberByActivity([FromQuery] int activityId)
+        {
+            if (activityId <= 0)
+                return BadRequest("ActivityId cannot be less than 0.");
+            var response = await _service.SubscriberService.GetAllSubscribersAsync(false);
+            var ss = response.Where(b => b.ActivityId.Equals(activityId));
+            return Ok(ss);
+        }
 
         [HttpPost]
         public async Task<IActionResult> CreateSubscriber([FromBody] SubscriberCreateModel subscriberCreateModel)

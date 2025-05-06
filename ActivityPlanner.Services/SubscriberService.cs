@@ -71,6 +71,16 @@ namespace ActivityPlanner.Services
             return subsResponse;
         }
 
+        public async Task<List<SubscriberResponseModel>> GetAllSubscribersByActivityAsync(int activityId, bool trackChanges)
+        {
+            var activity = await _repositoryManager.Activity.GetOneActivityAsync(activityId, false);
+            if (activity == null)
+                throw new NotFoundException($"No activity found for the entered id.");
+            var subscribersByActivity =await _repositoryManager.Subscriber.GetAllSubscribersByActivityAsync(activity.Id, false);
+            var response = _mapper.Map<List<SubscriberResponseModel>>(subscribersByActivity);
+            return response;
+        }
+
         public async Task<SubscriberResponseModel> GetOneSubscriberAsync(int id, bool trackChanges)
         {
             var sub = await _repositoryManager.Subscriber.GetOneSubscriberAsync(id, trackChanges);

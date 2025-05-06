@@ -14,5 +14,12 @@ namespace ActivityPlanner.Repositories.Contracts.RepositoryContracts
         void CreateOneSubscriber(Subscriber subscriber);
         void UpdateOneSubscriber(Subscriber subscriber);
         void DeleteOneSubscriber(Subscriber subscriber);
+        /// <summary>
+        /// Girilen activity id'e ait olan tüm subscriber'ları getirir.
+        /// </summary>
+        /// <param name="activityId"></param>
+        /// <param name="trackChanges"></param>
+        /// <returns></returns>
+        Task<List<Subscriber>> GetAllSubscribersByActivityAsync(int activityId,bool trackChanges);
     }
 }
