@@ -39,4 +39,3 @@
 1. Clone the repository:
    ```bash
    git clone https://github.com/omerkrmn/activity-planner.git
->>>>>>> dc6d9783c2fa4441ac34dfff44835c471eff802e
