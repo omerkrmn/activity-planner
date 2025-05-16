@@ -17,5 +17,8 @@ namespace ActivityPlanner.Entities.DTOs.Activity
         public string ActivityDescription { get; set; } = string.Empty;
         public int AttendanceStatusConfirmedCount { get; set; } = 0;
         public int AttendanceStatusUnsureCount { get; set; } = 0;
+        public bool isActive { get; set; } = true;
+        public DateTime CreatedAt { get; set; }
+        public DateTime LastRegistrationDate { get; set; }
     }
 }

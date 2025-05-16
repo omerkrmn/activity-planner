@@ -12,27 +12,13 @@ namespace ActivityPlanner.Repositories.EFcore
     {
         public RepositoryContext(DbContextOptions<RepositoryContext> options) : base(options) { }
 
-        public DbSet<Activity> Activities { get; set; } 
+        public DbSet<Activity> Activities { get; set; }
         public DbSet<Subscriber> Subscribers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-
-            builder.Entity<Activity>()
-                .Property(a => a.CreatedAt)
-                .HasDefaultValueSql("getdate()");
-
-            builder.Entity<Subscriber>()
-               .Property(s => s.CreatedAt)
-              .HasDefaultValueSql("getdate()");
-
-            builder.Entity<Activity>()
-                .HasOne(u => u.AppUser)
-                .WithMany(u => u.Activities)
-                .HasForeignKey(p => p.AppUserId);
-
-            builder.ApplyConfiguration(new RoleConfiguration());
+            builder.ApplyConfigurationsFromAssembly(typeof(RepositoryContext).Assembly);
         }
 
 

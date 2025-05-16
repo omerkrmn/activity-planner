@@ -23,16 +23,23 @@ namespace ActivityPlanner.Services
         public async Task<ActivityResponseModel> CreateOneActivitiyAsync(ActivityCreateRequestModel activity, string userId)
         {
             if (activity == null)
-                throw new ArgumentNullException();
-            var tempActivity = _mapper.Map<Activity>(activity);
-            tempActivity.AppUserId = userId;
+                throw new ArgumentNullException(nameof(activity));
 
-            _repositoryManager.Activity.CreateOneActivitiy(tempActivity);
+            var now = DateTime.UtcNow;
+            
+            if (activity.LastRegistrationDate < now)
+                throw new ArgumentException("LastRegistrationDate cannot be earlier than the current UTC time.", nameof(activity.LastRegistrationDate));
 
+            var newActivity = _mapper.Map<Activity>(activity);
+            newActivity.AppUserId = userId;
+            newActivity.CreatedAt = now;
+            newActivity.LastUpdatedAt = now;
+            _repositoryManager.Activity.CreateOneActivitiy(newActivity);
             await _repositoryManager.SaveAsync();
 
-            return _mapper.Map<ActivityResponseModel>(_mapper.Map<Activity>(tempActivity));
+            return _mapper.Map<ActivityResponseModel>(newActivity);
         }
+
 
         public async Task<ActivityResponseModel> DeleteOneActivitiyAsync(string userId, string activityName)
         {
@@ -88,6 +95,7 @@ namespace ActivityPlanner.Services
         {
             if (activity is null) throw new ArgumentNullException();
             var actv = await _repositoryManager.Activity.GetOneActivityAsync(activity.Id, true);
+            actv.LastUpdatedAt= DateTime.UtcNow;
             await _repositoryManager.SaveAsync();
             return _mapper.Map<ActivityResponseModel>(actv);
         }

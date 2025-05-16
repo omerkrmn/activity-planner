@@ -18,11 +18,7 @@ namespace ActivityPlanner.Repositories.EFcore
         {
 
         }
-        //some other functions
-
-        // buradaki kod satırı değişebilir yerinin burası olup olmadığına emin değilim.
-        // SubscriberService sınıfında bu tarz bir metoda ihtiyaç duydum aynı kodu 3 kere yazmak istemedim.
-        // ya ActivityService'yi DI a ekleyip Serviceler arası bi bağımlılık oluşturacaktım ya da bu şekilde kullanacaktım.
+        //TODO: Bu fonksiyonun yeri burası değil. service katmanına taşı
         public async Task ChangeActivityAttendanceStatusCountAsync(int activityId, AttendanceStatus status)
         {
             var activity = await FindAll(true)
