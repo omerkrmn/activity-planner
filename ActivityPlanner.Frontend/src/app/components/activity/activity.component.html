@@ -3,6 +3,20 @@
         <div class="col align-self-center text-center h-50 d-inline-block">
             <div class="card d-inline-block" style="width: 100%;">
                 <div class="card-header">
+                    <div class="text-end">
+                        <span>
+                            <span class="text-primary fw-bold">Oluşturulma Tarihi </span>
+                            : {{activity?.createdAt | date}}
+                        </span><br>
+                        <span>
+                            <span class="text-primary fw-bold">Son Kayıt</span>
+                            : {{activity?.lastRegistrationDate | date}}
+                        </span><br>
+                        <span>
+                            <span class="text-primary fw-bold">Kalan Süre</span>
+                            : {{getRemainingDays(activity?.lastRegistrationDate)}}
+                        </span>
+                    </div>
                     <h2 class="text-primary text-start p-3">{{ activity?.activityName | titlecase }}</h2>
                 </div>
                 <div class="card-body">
@@ -61,7 +75,7 @@
 
                     <!-- Radio Buttons: Katılıyorum -->
                     <div class="form-check text-start mx-3">
-                        <input class="form-check-input" type="radio" id="katiliyorum" formControlName="attendanceStatus" 
+                        <input class="form-check-input" type="radio" id="katiliyorum" formControlName="attendanceStatus"
                             value="0" />
                         <label class="form-check-label" for="katiliyorum">Katılıyorum</label>
                     </div>

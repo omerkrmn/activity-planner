@@ -23,6 +23,13 @@ builder.Services.ConfigureIdentity();
 builder.Services.ConfigureJWT(builder.Configuration);
 //builder.Services.ConfigureRedisService(builder.Configuration);
 
+builder.Logging.ClearProviders();
+builder.Logging.AddSimpleConsole(options =>
+{
+    options.SingleLine = true;
+    options.IncludeScopes = false;
+});
+
 var app = builder.Build();
 app.ConfigureExceptionHandler();
 app.UseCors("MyAllowSpecificOrigins");

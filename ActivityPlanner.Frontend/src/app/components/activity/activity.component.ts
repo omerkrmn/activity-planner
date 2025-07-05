@@ -75,5 +75,21 @@ export class ActivityComponent implements OnInit {
       console.log('Form geçerli değil');
     }
   }
+  getRemainingDays(dateString: string | Date | undefined): string {
+    if (!dateString) return 'Tarih yok';
+
+    const now = new Date().getTime();
+    const target = new Date(dateString).getTime();
+    const diff = target - now;
+
+    if (diff <= 0) return 'Süre doldu';
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+    
+    return `${days == 0 ? '' : days + 'gün ,'} ${hours} saat, ${minutes} dakika, ${seconds} saniye kaldı`;
+  }
 }
 

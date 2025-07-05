@@ -20,7 +20,5 @@ namespace ActivityPlanner.Repositories.EFcore
             base.OnModelCreating(builder);
             builder.ApplyConfigurationsFromAssembly(typeof(RepositoryContext).Assembly);
         }
-
-
     }
 }

@@ -1,10 +1,12 @@
-﻿using ActivityPlanner.Entities.DTOs.Activites;
+﻿using ActivityPlanner.API.Attributes;
+using ActivityPlanner.Entities.DTOs.Activites;
 using ActivityPlanner.Entities.DTOs.Activity;
 using ActivityPlanner.Entities.Models;
 using ActivityPlanner.Services;
 using ActivityPlanner.Services.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,15 +18,17 @@ namespace ActivityPlanner.Presentation.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ActivityController(IServiceManager service/*, IRedisCacheService redisCacheService*/) : ControllerBase
+    [LogAction]
+    public class ActivityController(IServiceManager service, ILogger<ActivityController> logger/*, IRedisCacheService redisCacheService*/) : ControllerBase
     {
-        private readonly IServiceManager _service=service;
+        private readonly IServiceManager _service = service;
+        private readonly ILogger _logger = logger;
 
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateActivity([FromBody] ActivityCreateRequestModel requestModel)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 throw new ArgumentNullException(nameof(requestModel));
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -37,7 +41,7 @@ namespace ActivityPlanner.Presentation.Controllers
         {
             //var cacheKey = $"activity:{userName}:{activityName}";
             //var cachedActivity = await _service.RedisCacheService.GetCacheAsync<ActivityResponseModel>(cacheKey);
-            
+
             //if (cachedActivity != null)
             //    return Ok(cachedActivity);
 
@@ -54,7 +58,7 @@ namespace ActivityPlanner.Presentation.Controllers
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId is null)
                 return Unauthorized();
-            await _service.ActivityService.DeleteOneActivitiyAsync(userId,activityName);
+            await _service.ActivityService.DeleteOneActivitiyAsync(userId, activityName);
             return NoContent();
         }
     }
