@@ -21,6 +21,10 @@ namespace ActivityPlanner.Entities.Models
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime LastUpdatedAt { get; set; } = DateTime.Now;
         public DateTime LastRegistrationDate { get; set; }
-        public bool isActive {  get; set; } = true;
+        public bool IsActive => LastRegistrationDate.Date >= DateTime.UtcNow.Date;
+
+        public string Country { get; set; } = string.Empty; 
+        public string City { get; set; } = string.Empty;
+        public string ActivityFullAddress { get; set; } = string.Empty;
     }
 }

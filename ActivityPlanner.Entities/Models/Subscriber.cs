@@ -23,6 +23,5 @@ namespace ActivityPlanner.Entities.Models
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime LastUpdatedAt { get; set; }
-
     }
 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ActivityPlanner.Entities.DTOs.Activity
 {
     //buna çokta gerek olmayabilir.
-    public class ActivityResponseModel
+    public class ActivityResponsDto
     {
         public int Id { get; set; }
         public string AppUserId { get; set; } =string.Empty;

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ActivityPlanner.Entities.Enums;
+using ActivityPlanner.Entities.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,12 +9,13 @@ using System.Threading.Tasks;
 
 namespace ActivityPlanner.Entities.DTOs.Subscriber
 {
-    public class SubscriberDeleteModel 
+    public class SubscriberUpdateDto
     {
-        [Required]  
         public int ActivityId { get; set; }
-        [Required]
+        public int Id { get; set; }
+
         [EmailAddress]
-        public string SubscriberMail { get; set; } = string.Empty;
+        public AttendanceStatus AttendanceStatus { get; set; }
+
     }
 }
