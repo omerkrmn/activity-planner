@@ -16,6 +16,7 @@ export class AuthService {
     console.log(this.baseUrl);
     return this.http.post<any>(this.baseUrl + "/login", loginData);
   }
+
   signup(signupData: Omit<SignUp, 'roles'>): Observable<any> {
     const payload: SignUp = {
       ...signupData,
@@ -23,6 +24,7 @@ export class AuthService {
     };
     return this.http.post<any>(this.baseUrl, payload);
   }
+  
   isLoggedIn(): boolean {
     return !!localStorage.getItem('access_token');
   }

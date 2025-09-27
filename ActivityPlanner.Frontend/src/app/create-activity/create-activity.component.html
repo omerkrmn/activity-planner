@@ -1,47 +1,8 @@
-<div class="container my-5">
-    <div class="row">
-        <div class="col align-self-center text-center h-50 d-inline-block">
-            <div class="card d-inline-block" style="width: 100%;">
-                <div class="card-header">
-                    <div class="text-end">
-                        <span>
-                            <span class="text-primary fw-bold">Oluşturulma Tarihi </span>
-                            : {{activity?.createdAt | date}}
-                        </span><br>
-                        <span>
-                            <span class="text-primary fw-bold">Son Kayıt</span>
-                            : {{activity?.lastRegistrationDate | date}}
-                        </span><br>
-                        <span>
-                            <span class="text-primary fw-bold">Kalan Süre</span>
-                            : {{getRemainingDays(activity?.lastRegistrationDate)}}
-                        </span>
-                    </div>
-                    <h2 class="text-primary text-start p-3">{{ activity?.activityName | titlecase }}</h2>
-                </div>
-                <div class="card-body">
-                    <p class="card-text text-start">{{ activity?.activityDescription | titlecase }}</p>
-                    <div class="text-end">
-                        <span data-bs-toggle="tooltip" data-bs-placement="top"
-                            title="Kesin olarak Katılacak Kullanıcı sayısı.">
-                            <i class="bi bi-check-circle text-success me-1"></i>
-                            Confirmed: {{ activity?.attendanceStatusConfirmedCount }}
-                        </span><br>
-                        <span data-bs-toggle="tooltip" data-bs-placement="top"
-                            title="Kararsız olan kullanıcı sayısını belirtir.">
-                            <i class="bi bi-question-circle text-warning me-1"></i>
-                            Unsure: {{ activity?.attendanceStatusUnsureCount }}
-                        </span>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="container mt-5">
     <div class="row mt-5">
         <div class="col align-self-center text-center h-50 d-inline-block">
             <div class="card d-inline-block" style="width: 100%;">
-                <form [formGroup]="subscriberForm" (ngSubmit)="onSubmit()">
+                <form >
                     <div class="card-header mb-3">
                         <h3 class="text-start p-3 text-primary">Katılım Formu</h3>
                     </div>
@@ -72,13 +33,6 @@
                                 style="max-width: 58%;" />
                         </div>
                     </div>
-                    <div class="row mb-2 px-3 d-flex text-start">
-                        <label for="note" class="col-2 col-form-label">Note</label>
-                        <div class="col-10">
-                            <input type="text" id="note" formControlName="note" class="form-control"
-                                style="max-width: 58%;" />
-                        </div>
-                    </div>
 
                     <!-- Radio Buttons: Katılıyorum -->
                     <div class="form-check text-start mx-3">
@@ -101,5 +55,4 @@
             </div>
         </div>
     </div>
-
 </div>

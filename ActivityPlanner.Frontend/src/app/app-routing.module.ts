@@ -5,10 +5,11 @@ import { LoginComponent } from './pages/login/login.component';
 import { NoAuthGuard } from './guards/auth.guard';
 import { HomeComponent } from './components/home/home.component';
 import { SignupComponent } from './pages/signup/signup.component';
+import { CreateActivityComponent } from './create-activity/create-activity.component';
 
 const routes: Routes = [
   {
-    path: 'activity/:username/:activityname',
+    path: 'activity/:id',
     component: ActivityComponent
   }, {
     path: 'login',
@@ -16,7 +17,7 @@ const routes: Routes = [
     canActivate: [NoAuthGuard]
   }, {
     path: 'activity',
-    component: ActivityComponent
+    component: CreateActivityComponent
   }, {
     path: 'signup',
     component: SignupComponent
