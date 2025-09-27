@@ -1,7 +1,10 @@
 ﻿using ActivityPlanner.Entities.Enums;
+using ActivityPlanner.Entities.Exceptions;
 using ActivityPlanner.Entities.Models;
+using ActivityPlanner.Entities.RequestFeatures;
 using ActivityPlanner.Repositories.Contracts;
 using ActivityPlanner.Repositories.Contracts.RepositoryContracts;
+using ActivityPlanner.Repositories.EFcore.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -17,14 +20,78 @@ namespace ActivityPlanner.Repositories.EFcore
     {
         public ActivityRepository(RepositoryContext context) : base(context)
         {
-
         }
-        //TODO: Bu fonksiyonun yeri burası değil. service katmanına taşı
-        public async Task ChangeActivityAttendanceStatusCountAsync(int activityId, AttendanceStatus status)
+
+        public async Task<IReadOnlyList<Activity>> GetAllAsync(ActivityParameters parameters, bool trackChanges, CancellationToken ct = default)
         {
-            var activity = await FindAll(true)
-                .Where(a => a.Id.Equals(activityId))
-                .SingleOrDefaultAsync();
+            return await FindAll(trackChanges)
+                        .CheckStatus()
+                        .CheckCountry(parameters.Country)
+                        .CheckCity(parameters.City)
+                        .CheckDate(parameters.Date)
+                        .OrderBy(a => a.Id)
+                        .Skip((parameters.PageNumber - 1) * parameters.PageSize)
+                        .Take(parameters.PageSize)
+                        .ToListAsync(ct);
+        }
+
+        public async Task<IReadOnlyList<Activity>> GetAllByUserAsync(string userId, ActivityParameters parameters, bool trackChanges, CancellationToken ct = default)
+        {
+            return await FindByCondition(a => a.AppUserId == userId, trackChanges)
+                        .CheckStatus()
+                        .CheckCountry(parameters.Country)
+                        .CheckCity(parameters.City)
+                        .CheckDate(parameters.Date)
+                        .OrderBy(a => a.Id)
+                        .Skip((parameters.PageNumber - 1) * parameters.PageSize)
+                        .Take(parameters.PageSize)
+                        .ToListAsync(ct);
+        }
+
+        public async Task<Activity?> GetByIdAsync(int id, bool trackChanges, CancellationToken ct = default)
+        {
+            return await FindByCondition(a => a.Id == id, trackChanges)
+                        .SingleOrDefaultAsync(ct)
+                        .ConfigureAwait(false);
+        }
+
+        public async Task<Activity?> GetByIdForUserAsync(int activityId, string userId, bool trackChanges, CancellationToken ct = default)
+        {
+            return await FindByCondition(a => a.Id == activityId && a.AppUserId == userId, trackChanges)
+                        .Include(a => a.AppUser)
+                        .OrderBy(a => a.Id)
+                        .FirstOrDefaultAsync(ct);
+        }
+
+        public async Task<int> GetTotalCountAsync(ActivityParameters parameters, CancellationToken ct = default)
+        {
+            return await FindAll(false)
+                        .CheckStatus()
+                        .CheckCountry(parameters.Country)
+                        .CheckCity(parameters.City)
+                        .CheckDate(parameters.Date)
+                        .CountAsync(ct);
+        }
+        public async Task IncrementAttendanceStatusCountAsync(int activityId, AttendanceStatus status, CancellationToken ct = default)
+        {
+            var entity = await FindByCondition(a => a.Id == activityId, true)
+                .FirstOrDefaultAsync(ct);
+            
+            if (entity == null)
+                throw new NotFoundException("Activity not found.");
+            
+            if (status == AttendanceStatus.Confirmed)
+                entity.AttendanceStatusConfirmedCount++;
+
+            else if (status == AttendanceStatus.Unsure)
+                entity.AttendanceStatusUnsureCount++;
+        }
+        public async Task ChangeAttendanceStatusCountAsync(int activityId, AttendanceStatus status, CancellationToken ct = default)
+        {
+            var activity = await
+                         FindAll(true)
+                        .Where(a => a.Id.Equals(activityId))
+                        .SingleOrDefaultAsync(ct);
             if (activity == null)
                 throw new ArgumentNullException("activity is null");
 
@@ -39,43 +106,5 @@ namespace ActivityPlanner.Repositories.EFcore
                 activity.AttendanceStatusUnsureCount--;
             }
         }
-
-        public async Task<List<Activity>> GetAllActivitiesWithUserAsync(bool trackChanges, string userName)
-        {
-            return await
-                FindAll(trackChanges)
-                .Include(b => b.AppUser)
-                .Where(a => a.AppUser.UserName.Equals(userName))
-                .ToListAsync();
-        }
-        public async Task<Activity> GetOneActivityAsync(string userName, string activityName, bool trackChanges)
-        {
-            return await FindAll(trackChanges)
-                .Where(b => b.AppUser.UserName.Equals(userName))
-                .Include(b => b.AppUser)
-                .Where(b => b.ActivityName.Equals(activityName))
-                .SingleOrDefaultAsync();
-        }
-
-        public void CreateOneActivitiy(Activity activity) => Create(activity);
-
-        public void DeleteOneActivitiy(Activity activity) => Delete(activity);
-
-        public async Task<List<Activity>> GetAllActivitiesAsync(bool trackChanges)
-        {
-
-            return await
-                FindAll(trackChanges)
-                .OrderBy(a => a.Id)
-                .ToListAsync();
-        }
-
-        public async Task<Activity> GetOneActivityAsync(int id, bool trackChanges) =>
-            await FindByCondition(b => b.Id.Equals(id), trackChanges)
-            .SingleOrDefaultAsync();
-
-        public void UpdateOneActivitiy(Activity activity) => Update(activity);
-
-
     }
 }

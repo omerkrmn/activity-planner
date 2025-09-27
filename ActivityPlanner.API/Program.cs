@@ -31,6 +31,7 @@ builder.Logging.AddSimpleConsole(options =>
 });
 
 var app = builder.Build();
+
 app.ConfigureExceptionHandler();
 app.UseCors("MyAllowSpecificOrigins");
 

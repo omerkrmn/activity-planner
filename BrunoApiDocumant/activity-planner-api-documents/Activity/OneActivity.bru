@@ -1,0 +1,33 @@
+meta {
+  name: OneActivity
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{ApiUrl}}activities
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{Token}}
+}
+
+body:json {
+  {
+    "activityName": "Teni Oynayalım",
+    "activityDescription": "Arkadaşlar bildiğiiz gibi artık ders çalışıyorum ve bundan dolayı sınırlı vakte sahibim ve bu vakitte tenis ve bu vakitlerin haricinde tenis oynamak istiyrum kimler gelebilir?",
+    "lastRegistrationDate": "{{lastRegistrationDate}}"
+  }
+}
+
+script:pre-request {
+  let now = new Date();
+  now.setDate(now.getDate() + 3); 
+  
+  let isoString = now.toISOString();  
+  bru.setEnvVar("lastRegistrationDate", isoString);
+  
+  
+}

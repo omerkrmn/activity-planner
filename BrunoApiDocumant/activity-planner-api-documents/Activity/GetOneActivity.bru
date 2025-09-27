@@ -1,0 +1,20 @@
+meta {
+  name: GetOneActivity
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{ApiUrl}}activities/2078
+  body: none
+  auth: inherit
+}
+
+script:pre-request {
+  var userName = "ananasor";
+  var activityName = "deneme";
+  
+  bru.setEnvVar("username", userName);
+  bru.setEnvVar("activityname", activityName);
+  
+}

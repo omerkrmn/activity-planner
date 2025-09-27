@@ -1,0 +1,19 @@
+meta {
+  name: UpdateSubscribe
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{ApiUrl}}subscriber
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "subscriberId": 1,
+    "attendanceStatus": 1,
+    "activityId": 1
+  }
+}

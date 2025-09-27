@@ -1,6 +1,7 @@
 ﻿using ActivityPlanner.Entities.DTOs.Activity;
 using ActivityPlanner.Entities.Enums;
 using ActivityPlanner.Entities.Models;
+using ActivityPlanner.Entities.RequestFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,16 +12,35 @@ namespace ActivityPlanner.Repositories.Contracts.RepositoryContracts
 {
     public interface IActivityRepository : IRepositoryBase<Activity>
     {
-        Task<List<Activity>> GetAllActivitiesAsync(bool trackChanges);
-        
-        Task<Activity> GetOneActivityAsync(int id, bool trackChanges);
-        Task<Activity> GetOneActivityAsync(string userName, string activityName,bool trackChanges);
-        Task<List<Activity>> GetAllActivitiesWithUserAsync(bool trackChanges, string userName);
-        void CreateOneActivitiy(Activity activity);
-        void UpdateOneActivitiy(Activity activity);
-        void DeleteOneActivitiy(Activity activity);
 
-        Task ChangeActivityAttendanceStatusCountAsync(int activityId, AttendanceStatus status);
+        Task<IReadOnlyList<Activity>> GetAllAsync(
+            ActivityParameters parameters,
+            bool trackChanges,
+            CancellationToken ct = default);
 
+        Task<IReadOnlyList<Activity>> GetAllByUserAsync(
+            string userId,
+            ActivityParameters parameters,
+            bool trackChanges,
+            CancellationToken ct = default);
+
+        Task<Activity?> GetByIdAsync(
+            int id,
+            bool trackChanges,
+            CancellationToken ct = default);
+
+        Task<Activity?> GetByIdForUserAsync(
+            int activityId,
+            string userId,
+            bool trackChanges,
+            CancellationToken ct = default);
+
+        Task ChangeAttendanceStatusCountAsync(
+            int activityId,
+            AttendanceStatus status,
+            CancellationToken ct = default);
+
+        Task<int> GetTotalCountAsync(ActivityParameters parameters, CancellationToken ct = default);
+        Task IncrementAttendanceStatusCountAsync(int activityId,AttendanceStatus status,CancellationToken ct = default);
     }
 }

@@ -16,6 +16,7 @@ namespace ActivityPlanner.Entities.Models
         [EmailAddress]
         public string SubscriberMail { get; set; } = string.Empty;
         public string MailValidation { get; set; } = string.Empty;
+        public string Note { get; set; } = string.Empty;
         public AttendanceStatus AttendanceStatus { get; set; }
 
         public int ActivityId { get; set; }
@@ -23,5 +24,6 @@ namespace ActivityPlanner.Entities.Models
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime LastUpdatedAt { get; set; }
+
     }
 }

@@ -29,7 +29,8 @@ namespace ActivityPlanner.API.Extensions
                         maxRetryDelay: TimeSpan.FromSeconds(5), // Her deneme arasında 5 saniye bekleme
                         errorNumbersToAdd: null // Belirli hata kodları eklemek istersen buraya yazabilirsin
                     );
-                }));
+                })
+                .LogTo(Console.WriteLine, LogLevel.Information));
         }
 
         public static void ConfigureRepositoryManager(this IServiceCollection services) =>

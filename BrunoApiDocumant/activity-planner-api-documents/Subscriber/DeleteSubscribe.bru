@@ -1,0 +1,18 @@
+meta {
+  name: DeleteSubscribe
+  type: http
+  seq: 4
+}
+
+delete {
+  url: {{ApiUrl}}subscriber
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "activityId": 1,
+    "subscriberMail": ""
+  }
+}

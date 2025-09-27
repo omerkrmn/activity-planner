@@ -9,17 +9,8 @@ namespace ActivityPlanner.Repositories.Contracts.RepositoryContracts
 {
     public interface ISubscriberRepository : IRepositoryBase<Subscriber>
     {
-        Task<List<Subscriber>> GetAllSubscribersAsync(bool trackChanges);
-        Task<Subscriber> GetOneSubscriberAsync(int id, bool trackChanges);
-        void CreateOneSubscriber(Subscriber subscriber);
-        void UpdateOneSubscriber(Subscriber subscriber);
-        void DeleteOneSubscriber(Subscriber subscriber);
-        /// <summary>
-        /// Girilen activity id'e ait olan tüm subscriber'ları getirir.
-        /// </summary>
-        /// <param name="activityId"></param>
-        /// <param name="trackChanges"></param>
-        /// <returns></returns>
-        Task<List<Subscriber>> GetAllSubscribersByActivityAsync(int activityId,bool trackChanges);
+        Task<IReadOnlyList<Subscriber>> GetAllAsync(bool trackChanges, CancellationToken ct = default);
+        Task<Subscriber?> GetByIdAsync(int id, bool trackChanges, CancellationToken ct = default);
+        Task<IReadOnlyList<Subscriber>> GetByActivityIdAsync(int activityId, bool trackChanges, CancellationToken ct = default);
     }
 }

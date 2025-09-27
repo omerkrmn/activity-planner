@@ -19,6 +19,8 @@ namespace ActivityPlanner.Repositories.EFcore
         public IActivityRepository Activity => _activityRepository.Value;
         public ISubscriberRepository Subscriber => _subscriberRepository.Value;
 
-        public async Task SaveAsync() => await _context.SaveChangesAsync();
+        public async Task SaveAsync(CancellationToken cancellationToken = default) =>
+            await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
     }
 }

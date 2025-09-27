@@ -12,15 +12,15 @@ namespace ActivityPlanner.API.Utilities.AutoMapper
     {
         public MappingProfile()
         {
-            CreateMap<Activity,ActivityCreateRequestModel>().ReverseMap();
-            CreateMap<Activity,ActivityDeleteRequestModel>().ReverseMap();
-            CreateMap<Activity,ActivityUpdateRequestModel>().ReverseMap();
-            CreateMap<Activity,ActivityResponseModel>().ReverseMap();
+            CreateMap<Activity,ActivityCreateDto>().ReverseMap();
+            CreateMap<Activity,ActivityDeleteDto>().ReverseMap();
+            CreateMap<Activity,ActivityUpdateDto>().ReverseMap();
+            CreateMap<Activity,ActivityResponseDto>().ReverseMap();
             
-            CreateMap<Subscriber,SubscriberCreateModel>().ReverseMap();
-            CreateMap<Subscriber, SubscriberDeleteModel>().ReverseMap();
-            CreateMap<Subscriber, SubscriberUpdateModel>().ReverseMap();
-            CreateMap<Subscriber, SubscriberResponseModel>().ReverseMap();
+            CreateMap<Subscriber,SubscriberCreateDto>().ReverseMap();
+            CreateMap<Subscriber, SubscriberDeleteDto>().ReverseMap();
+            CreateMap<Subscriber, SubscriberUpdateDto>().ReverseMap();
+            CreateMap<Subscriber, SubscriberResponseDto>().ReverseMap();
 
             CreateMap<UserForRegistrationDto, AppUser>();
         }

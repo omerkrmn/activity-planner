@@ -10,12 +10,30 @@ namespace ActivityPlanner.Services.Contracts
 {
     public interface ISubscriberService
     {
-        Task<List<SubscriberResponseModel>> GetAllSubscribersAsync(bool trackChanges);
-        Task<SubscriberResponseModel> GetOneSubscriberAsync(int id, bool trackChanges);
-        Task<SubscriberResponseModel> CreateOneSubscriberAsync(SubscriberCreateModel subscriber);
-        Task<SubscriberResponseModel> UpdateOneSubscriberAsync(SubscriberUpdateModel subscriber);
-        Task<SubscriberResponseModel> DeleteOneSubscriberAsync(SubscriberDeleteModel subscriber);
+        Task<IReadOnlyList<SubscriberResponseDto>> GetAllAsync(
+            CancellationToken ct = default);
 
-        Task<List<SubscriberResponseModel>> GetAllSubscribersByActivityAsync(int activityId,bool trackChanges);
+        Task<SubscriberResponseDto?> GetByIdAsync(
+            int id,
+            CancellationToken ct = default);
+
+        Task<IReadOnlyList<SubscriberResponseDto>> GetByActivityIdAsync(
+            int activityId,
+            CancellationToken ct = default);
+
+        Task<SubscriberResponseDto> CreateAsync(
+            SubscriberCreateDto dto,
+            int activityId,
+            CancellationToken ct = default);
+
+        Task<SubscriberResponseDto> UpdateAsync(
+            SubscriberUpdateDto dto,
+            int activityId,
+            CancellationToken ct = default);
+
+        Task DeleteAsync(
+            SubscriberDeleteDto dto,
+            int activityId,
+            CancellationToken ct = default);
     }
 }

@@ -13,30 +13,18 @@ namespace ActivityPlanner.Repositories.EFcore
 {
     public class SubscriberRepository : RepositoryBase<Subscriber>, ISubscriberRepository
     {
-        public SubscriberRepository(RepositoryContext context) : base(context)
-        {
-        }
+        public SubscriberRepository(RepositoryContext context) : base(context){}
 
-        public void CreateOneSubscriber(Subscriber subscriber) => Create(subscriber);
+        public async Task<IReadOnlyList<Subscriber>> GetAllAsync(bool trackChanges, CancellationToken ct = default) =>
+             await FindAll(trackChanges)
+                  .ToListAsync(ct);
+        public async Task<IReadOnlyList<Subscriber>> GetByActivityIdAsync(int activityId, bool trackChanges, CancellationToken ct = default) =>
+             await FindByCondition(b => b.Activity.Id.Equals(activityId), trackChanges)
+                  .OrderBy(s => s.SubscriberName)
+                  .ToListAsync(ct);
 
-        public void DeleteOneSubscriber(Subscriber subscriber) => Delete(subscriber);
-
-        public async Task<List<Subscriber>> GetAllSubscribersAsync(bool trackChanges)
-        {
-            return await FindAll(trackChanges).OrderBy(s => s.SubscriberId).ToListAsync();
-        }
-
-        public async Task<List<Subscriber>> GetAllSubscribersByActivityAsync(int activityId, bool trackChanges)
-        {
-            return await
-                FindByCondition(b => b.Activity.Id.Equals(activityId), trackChanges).
-                OrderBy(s => s.SubscriberName).
-                ToListAsync();
-        }
-
-        public async Task<Subscriber> GetOneSubscriberAsync(int id, bool trackChanges)=> await FindByCondition(b => b.SubscriberId.Equals(id), trackChanges)
-            .SingleOrDefaultAsync();
-
-        public void UpdateOneSubscriber(Subscriber subscriber)=>Delete(subscriber);
+        public async Task<Subscriber?> GetByIdAsync(int id, bool trackChanges, CancellationToken ct = default) =>
+             await FindByCondition(b => b.SubscriberId.Equals(id), trackChanges)
+                  .SingleOrDefaultAsync(ct);
     }
 }

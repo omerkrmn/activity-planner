@@ -1,64 +1,70 @@
 ﻿using ActivityPlanner.API.Attributes;
 using ActivityPlanner.Entities.DTOs.Activites;
 using ActivityPlanner.Entities.DTOs.Activity;
-using ActivityPlanner.Entities.Models;
-using ActivityPlanner.Services;
+using ActivityPlanner.Entities.RequestFeatures;
 using ActivityPlanner.Services.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ActivityPlanner.Presentation.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("activities")]
     [LogAction]
-    public class ActivityController(IServiceManager service, ILogger<ActivityController> logger/*, IRedisCacheService redisCacheService*/) : ControllerBase
+    public class ActivityController : ControllerBase
     {
-        private readonly IServiceManager _service = service;
-        private readonly ILogger _logger = logger;
+        private readonly IServiceManager _service;
+        private readonly ILogger<ActivityController> _logger;
+
+        public ActivityController(IServiceManager service, ILogger<ActivityController> logger)
+        {
+            _service = service ?? throw new ArgumentNullException(nameof(service));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> CreateActivity([FromBody] ActivityCreateRequestModel requestModel)
+        public async Task<IActionResult> Create([FromBody] ActivityCreateDto requestModel, CancellationToken ct)
         {
             if (!ModelState.IsValid)
-                throw new ArgumentNullException(nameof(requestModel));
+                return BadRequest(ModelState);
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userId == null) return Unauthorized();
-            var response = await _service.ActivityService.CreateOneActivitiyAsync(requestModel, userId);
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            var response = await _service.ActivityService.CreateAsync(requestModel, userId, ct);
             return Ok(response);
         }
-        [HttpGet("{userName}/{activityName}")]
-        public async Task<IActionResult> GetOneActivity([FromRoute] string userName, [FromRoute] string activityName)
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll([FromQuery] ActivityParameters parameters, CancellationToken ct)
         {
-            //var cacheKey = $"activity:{userName}:{activityName}";
-            //var cachedActivity = await _service.RedisCacheService.GetCacheAsync<ActivityResponseModel>(cacheKey);
+            var activities = await _service.ActivityService.GetAllAsync(parameters, ct);
+            return Ok(activities);
+        }
 
-            //if (cachedActivity != null)
-            //    return Ok(cachedActivity);
-
-            var activity = await _service.ActivityService.GetOneActivityAsync(userName, activityName);
+        [HttpGet("{activityId:int}")]
+        public async Task<IActionResult> GetById([FromRoute] int activityId, CancellationToken ct)
+        {
+            var activity = await _service.ActivityService.GetByIdAsync(activityId, ct);
             if (activity == null)
                 return NotFound();
-            //await _service.Redis  CacheService.SetCacheAsync(cacheKey, activity, TimeSpan.FromSeconds(10));
+
             return Ok(activity);
         }
+
         [Authorize]
-        [HttpDelete("{activityName}")]
-        public async Task<IActionResult> DeleteActivity([FromRoute] string activityName)
+        [HttpDelete("{activityId:int}")]
+        public async Task<IActionResult> Delete([FromRoute] int activityId, CancellationToken ct)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userId is null)
+            if (string.IsNullOrEmpty(userId))
                 return Unauthorized();
-            await _service.ActivityService.DeleteOneActivitiyAsync(userId, activityName);
+
+            await _service.ActivityService.DeleteAsync(activityId, userId, ct);
             return NoContent();
         }
     }

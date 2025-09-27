@@ -17,6 +17,7 @@ namespace ActivityPlanner.Entities.DTOs.Subscriber
         public string SubscriberMail { get; set; } = string.Empty;
         public string MailValidation { get; set; } = string.Empty;
         public AttendanceStatus AttendanceStatus { get; set; }
+        public string Note { get; set; } = string.Empty;
 
         public int ActivityId { get; set; }
     }

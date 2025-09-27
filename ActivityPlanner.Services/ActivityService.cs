@@ -3,10 +3,12 @@ using ActivityPlanner.Entities.DTOs.Activity;
 using ActivityPlanner.Entities.Enums;
 using ActivityPlanner.Entities.Exceptions;
 using ActivityPlanner.Entities.Models;
+using ActivityPlanner.Entities.RequestFeatures;
 using ActivityPlanner.Repositories.Contracts;
 using ActivityPlanner.Services.Contracts;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,89 +17,109 @@ using System.Threading.Tasks;
 
 namespace ActivityPlanner.Services
 {
-    public class ActivityService(IRepositoryManager repositoryManager, IMapper mapper) : IActivityService
+    public class ActivityService : IActivityService
     {
-        private readonly IRepositoryManager _repositoryManager = repositoryManager;
-        private readonly IMapper _mapper = mapper;
+        private readonly IRepositoryManager _repositoryManager;
+        private readonly IMapper _mapper;
 
-        public async Task<ActivityResponseModel> CreateOneActivitiyAsync(ActivityCreateRequestModel activity, string userId)
+        public ActivityService(IRepositoryManager repositoryManager, IMapper mapper)
         {
-            if (activity == null)
-                throw new ArgumentNullException(nameof(activity));
+            _repositoryManager = repositoryManager ?? throw new ArgumentNullException(nameof(repositoryManager));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        }
+
+        public async Task<ActivityResponseDto> CreateAsync(
+            ActivityCreateDto dto,
+            string userId,
+            CancellationToken ct = default)
+        {
+            if (dto is null) throw new ArgumentNullException(nameof(dto));
+            if (string.IsNullOrWhiteSpace(userId)) throw new ArgumentException("User id is required.", nameof(userId));
 
             var now = DateTime.UtcNow;
-            
-            if (activity.LastRegistrationDate < now)
-                throw new ArgumentException("LastRegistrationDate cannot be earlier than the current UTC time.", nameof(activity.LastRegistrationDate));
+            if (dto.LastRegistrationDate < now)
+                throw new ArgumentException("LastRegistrationDate cannot be earlier than now.", nameof(dto.LastRegistrationDate));
 
-            var newActivity = _mapper.Map<Activity>(activity);
-            newActivity.AppUserId = userId;
-            newActivity.CreatedAt = now;
-            newActivity.LastUpdatedAt = now;
-            _repositoryManager.Activity.CreateOneActivitiy(newActivity);
-            await _repositoryManager.SaveAsync();
+            var entity = _mapper.Map<Activity>(dto);
+            entity.AppUserId = userId;
+            entity.CreatedAt = now;
+            entity.LastUpdatedAt = now;
 
-            return _mapper.Map<ActivityResponseModel>(newActivity);
+            _repositoryManager.Activity.Create(entity);
+            await _repositoryManager.SaveAsync(ct);
+
+            return _mapper.Map<ActivityResponseDto>(entity);
         }
 
-
-        public async Task<ActivityResponseModel> DeleteOneActivitiyAsync(string userId, string activityName)
+        public async Task DeleteAsync(int activityId, string userId, CancellationToken ct = default)
         {
-            if (string.IsNullOrEmpty(activityName))
-                throw new ArgumentNullException(nameof(activityName));
-            var activity = await _repositoryManager.Activity.FindAll(true).Include(u => u.AppUser).Where(u => u.AppUser.Id.Equals(userId)).SingleOrDefaultAsync();
-            if (activity == null)
-                throw new NotFoundException(nameof(AppUser));
+            if (string.IsNullOrWhiteSpace(userId)) throw new ArgumentException("User id is required.", nameof(userId));
 
-            var userName = activity.AppUser.UserName;
-            if (userName == null)
-                throw new NotFoundException(nameof(AppUser));
-            var result = await _repositoryManager.Activity.GetOneActivityAsync(userName!, activityName, true);
+            var entity = await _repositoryManager.Activity
+                .GetByIdForUserAsync(activityId, userId, trackChanges: true, ct);
 
-            _repositoryManager.Activity.Delete(result);
-            await _repositoryManager.SaveAsync();
-            return _mapper.Map<ActivityResponseModel>(result);
+            if (entity is null)
+                throw new NotFoundException("Activity not found or not owned by the user.");
+
+            _repositoryManager.Activity.Delete(entity);
+            await _repositoryManager.SaveAsync(ct);
         }
 
-        public async Task<List<ActivityResponseModel>> GetAllActivitiesAsync(bool trackChanges)
+        public async Task<IReadOnlyList<ActivityResponseDto>> GetAllAsync(
+            ActivityParameters parameters,
+            CancellationToken ct = default)
         {
-            var activities = await _repositoryManager.Activity.GetAllActivitiesAsync(trackChanges);
-            var activitiesResponse = _mapper.Map<List<ActivityResponseModel>>(activities);
-            return activitiesResponse;
+            if (parameters is null) throw new ArgumentNullException(nameof(parameters));
+
+            var activities = await _repositoryManager.Activity.GetAllAsync(parameters, trackChanges: false, ct);
+            return _mapper.Map<IReadOnlyList<ActivityResponseDto>>(activities);
         }
 
-        public async Task<List<ActivityResponseModel>> GetAllActivitiesByUser(bool trackChanges, string userName)
+        public async Task<IReadOnlyList<ActivityResponseDto>> GetAllByUserAsync(
+            ActivityParameters parameters,
+            string userId,
+            CancellationToken ct = default)
         {
-            var activities = await _repositoryManager.Activity.GetAllActivitiesWithUserAsync(trackChanges, userName);
-            var response = _mapper.Map<List<ActivityResponseModel>>(activities);
-            return response;
-        }
-        public async Task<ActivityResponseModel> GetOneActivityAsync(string userName, string activityName)
-        {
-            if (userName is null || activityName is null)
-                throw new ArgumentNullException("user name or activity name is null");
-            var activity = await _repositoryManager.Activity.GetOneActivityAsync(userName, activityName, false);
-            if (activity is null)
-                throw new ArgumentNullException();
-            return _mapper.Map<ActivityResponseModel>(activity);
+            if (parameters is null) throw new ArgumentNullException(nameof(parameters));
+            if (string.IsNullOrWhiteSpace(userId)) throw new ArgumentException("User id is required.", nameof(userId));
+
+            var activities = await _repositoryManager.Activity.GetAllByUserAsync(userId, parameters, trackChanges: false, ct);
+            return _mapper.Map<IReadOnlyList<ActivityResponseDto>>(activities);
         }
 
-        public async Task<ActivityResponseModel> GetOneActivityAsync(int id, bool trackChanges)
+        public async Task<ActivityResponseDto?> GetByIdAsync(
+            int activityId,
+            CancellationToken ct = default)
         {
-            var activity = await _repositoryManager.Activity.GetOneActivityAsync(id, trackChanges);
-            if (activity is null)
-                throw new ArgumentNullException();
-            return _mapper.Map<ActivityResponseModel>(activity);
+            var entity = await _repositoryManager.Activity.GetByIdAsync(activityId, trackChanges: false, ct);
+            return entity is null ? null : _mapper.Map<ActivityResponseDto>(entity);
         }
 
-
-        public async Task<ActivityResponseModel> UpdateOneActivitiyAsync(ActivityUpdateRequestModel activity)
+        public async Task<ActivityResponseDto> UpdateAsync(
+            ActivityUpdateDto dto,
+            string userId,
+            CancellationToken ct = default)
         {
-            if (activity is null) throw new ArgumentNullException();
-            var actv = await _repositoryManager.Activity.GetOneActivityAsync(activity.Id, true);
-            actv.LastUpdatedAt= DateTime.UtcNow;
-            await _repositoryManager.SaveAsync();
-            return _mapper.Map<ActivityResponseModel>(actv);
+            if (dto is null) throw new ArgumentNullException(nameof(dto));
+            if (string.IsNullOrWhiteSpace(userId)) throw new ArgumentException("User id is required.", nameof(userId));
+
+            var entity = await _repositoryManager.Activity
+                .GetByIdForUserAsync(dto.Id, userId, trackChanges: true, ct);
+
+            if (entity is null)
+                throw new NotFoundException("Activity not found or not owned by the user.");
+
+            if (dto.LastRegistrationDate < DateTime.UtcNow)
+                throw new ArgumentException("LastRegistrationDate cannot be earlier than now.", nameof(dto.LastRegistrationDate));
+
+            _mapper.Map(dto, entity);
+            entity.LastUpdatedAt = DateTime.UtcNow;
+
+            _repositoryManager.Activity.Update(entity);
+            await _repositoryManager.SaveAsync(ct);
+
+            return _mapper.Map<ActivityResponseDto>(entity);
         }
     }
+
 }

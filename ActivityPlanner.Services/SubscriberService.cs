@@ -14,88 +14,97 @@ using System.Threading.Tasks;
 
 namespace ActivityPlanner.Services
 {
-    public class SubscriberService(IRepositoryManager repositoryManager, IMapper mapper) : ISubscriberService
+    public class SubscriberService : ISubscriberService
     {
-        private readonly IRepositoryManager _repositoryManager = repositoryManager;
-        private readonly IMapper _mapper = mapper;
+        private readonly IRepositoryManager _repositoryManager;
+        private readonly IMapper _mapper;
 
-
-        public async Task<SubscriberResponseModel> CreateOneSubscriberAsync(SubscriberCreateModel subscriber)
+        public SubscriberService(IRepositoryManager repositoryManager, IMapper mapper)
         {
-            if (subscriber == null) throw new ArgumentNullException(nameof(subscriber));
-
-            var subscribers = await _repositoryManager.Subscriber
-            .GetAllSubscribersAsync(false);
-            var isAlreadySubscriber = subscribers
-                .Where(s => s.SubscriberMail == subscriber.SubscriberMail && s.ActivityId == subscriber.ActivityId)
-                .Any();
-            if (isAlreadySubscriber)
-                throw new ConflictException("This email address is already subscribed to this activity.");
-
-            var subcriberTemp = _mapper.Map<Subscriber>(subscriber);
-            _repositoryManager.Subscriber.CreateOneSubscriber(subcriberTemp);
-
-            var activity = await _repositoryManager.Activity.GetOneActivityAsync(subscriber.ActivityId, true);
-
-            switch (subscriber.AttendanceStatus)
-            {
-                case Entities.Enums.AttendanceStatus.Confirmed:
-                    activity.AttendanceStatusConfirmedCount++;
-                    break;
-
-                case Entities.Enums.AttendanceStatus.Unsure:
-                    activity.AttendanceStatusUnsureCount++;
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(subscriber.AttendanceStatus), $"Unexpected AttendanceStatus value: {subscriber.AttendanceStatus}");
-            }
-
-            await _repositoryManager.SaveAsync();
-            return _mapper.Map<SubscriberResponseModel>(subcriberTemp);
-
+            _repositoryManager = repositoryManager ?? throw new ArgumentNullException(nameof(repositoryManager));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<SubscriberResponseModel> DeleteOneSubscriberAsync(SubscriberDeleteModel subscriber)
+        public async Task<SubscriberResponseDto> CreateAsync(
+            SubscriberCreateDto dto,
+            int activityId,
+            CancellationToken ct = default)
         {
-            if (subscriber is null) throw new ArgumentNullException($"{nameof(subscriber)} cannot be null");
-            var activity = await _repositoryManager.Activity.GetOneActivityAsync(subscriber.ActivityId, true);
-            // subscriber'a ihtiyacım var modelleri(dto) çok yanlış oluşturmuşum. 
-            throw new Exception();
+            if (dto is null) throw new ArgumentNullException(nameof(dto));
+
+            var activity = await _repositoryManager.Activity.GetByIdAsync(activityId, trackChanges: false, ct);
+            if (activity is null)
+                throw new NotFoundException("Activity not found.");
+
+            // yeni subscriber ekle
+            var entity = _mapper.Map<Subscriber>(dto);
+            entity.ActivityId = activityId;
+            entity.CreatedAt = DateTime.UtcNow;
+            entity.LastUpdatedAt = DateTime.UtcNow;
+            
+            _repositoryManager.Subscriber.Create(entity);
+            await _repositoryManager.Activity.IncrementAttendanceStatusCountAsync(activityId, dto.AttendanceStatus, ct);
+            await _repositoryManager.SaveAsync(ct);
+
+            return _mapper.Map<SubscriberResponseDto>(entity);
         }
 
-        public async Task<List<SubscriberResponseModel>> GetAllSubscribersAsync(bool trackChanges)
+        public async Task DeleteAsync(
+            SubscriberDeleteDto dto,
+            int activityId,
+            CancellationToken ct = default)
         {
-            var subs = await _repositoryManager.Subscriber.GetAllSubscribersAsync(trackChanges);
-            var subsResponse = _mapper.Map<List<SubscriberResponseModel>>(subs);
-            return subsResponse;
+            if (dto is null) throw new ArgumentNullException(nameof(dto));
+
+            var subscriber = await _repositoryManager.Subscriber.GetByIdAsync(dto.ActivityId, trackChanges: true, ct);
+            if (subscriber is null || subscriber.ActivityId != activityId)
+                throw new NotFoundException("Subscriber not found or not part of this activity.");
+
+            _repositoryManager.Subscriber.Delete(subscriber);
+            await _repositoryManager.SaveAsync(ct);
         }
 
-        public async Task<List<SubscriberResponseModel>> GetAllSubscribersByActivityAsync(int activityId, bool trackChanges)
+        public async Task<IReadOnlyList<SubscriberResponseDto>> GetAllAsync(CancellationToken ct = default)
         {
-            var activity = await _repositoryManager.Activity.GetOneActivityAsync(activityId, false);
-            if (activity == null)
-                throw new NotFoundException($"No activity found for the entered id.");
-            var subscribersByActivity =await _repositoryManager.Subscriber.GetAllSubscribersByActivityAsync(activity.Id, false);
-            var response = _mapper.Map<List<SubscriberResponseModel>>(subscribersByActivity);
-            return response;
+            var subscribers = await _repositoryManager.Subscriber.GetAllAsync(trackChanges: false, ct);
+            return _mapper.Map<IReadOnlyList<SubscriberResponseDto>>(subscribers);
         }
 
-        public async Task<SubscriberResponseModel> GetOneSubscriberAsync(int id, bool trackChanges)
+        public async Task<IReadOnlyList<SubscriberResponseDto>> GetByActivityIdAsync(
+            int activityId,
+            CancellationToken ct = default)
         {
-            var sub = await _repositoryManager.Subscriber.GetOneSubscriberAsync(id, trackChanges);
-            if (sub == null) throw new ArgumentNullException();
-            return _mapper.Map<SubscriberResponseModel>(sub);
+            var subscribers = await _repositoryManager.Subscriber.GetByActivityIdAsync(activityId, trackChanges: false, ct);
+            return _mapper.Map<IReadOnlyList<SubscriberResponseDto>>(subscribers);
         }
 
-        public async Task<SubscriberResponseModel> UpdateOneSubscriberAsync(SubscriberUpdateModel subscriber)
+        public async Task<SubscriberResponseDto?> GetByIdAsync(
+            int id,
+            CancellationToken ct = default)
         {
-            if (subscriber is null) throw new ArgumentNullException();
-            var sub = await _repositoryManager.Subscriber.GetOneSubscriberAsync(subscriber.SubscriberId, true);
-            //misss gibi oldu :)
-            await _repositoryManager.Activity.ChangeActivityAttendanceStatusCountAsync(sub.ActivityId, sub.AttendanceStatus);
-            await _repositoryManager.SaveAsync();
-            return _mapper.Map<SubscriberResponseModel>(sub);
+            var subscriber = await _repositoryManager.Subscriber.GetByIdAsync(id, trackChanges: false, ct);
+            return subscriber is null ? null : _mapper.Map<SubscriberResponseDto>(subscriber);
+        }
+
+        public async Task<SubscriberResponseDto> UpdateAsync(
+            SubscriberUpdateDto dto,
+            int activityId,
+            CancellationToken ct = default)
+        {
+            if (dto is null) throw new ArgumentNullException(nameof(dto));
+
+            var subscriber = await _repositoryManager.Subscriber.GetByIdAsync(dto.Id, trackChanges: true, ct);
+            if (subscriber is null || subscriber.ActivityId != activityId)
+                throw new NotFoundException("Subscriber not found or not part of this activity.");
+
+            _mapper.Map(dto, subscriber);
+            subscriber.LastUpdatedAt = DateTime.UtcNow;
+
+            _repositoryManager.Subscriber.Update(subscriber);
+            await _repositoryManager.SaveAsync(ct);
+
+            return _mapper.Map<SubscriberResponseDto>(subscriber);
         }
     }
+
 }

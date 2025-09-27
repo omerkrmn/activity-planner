@@ -1,0 +1,16 @@
+meta {
+  name: AllActivity
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{ApiUrl}}activities?PageNumber=1&date=2025-09-28
+  body: none
+  auth: inherit
+}
+
+params:query {
+  PageNumber: 1
+  date: 2025-09-28
+}

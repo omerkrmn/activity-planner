@@ -1,0 +1,25 @@
+meta {
+  name: Register
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{ApiUrl}}Authentication
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "firstName": "Ömer",
+    "lastName": "Karaman",
+    "userName": "ananasor",
+    "password": "123456Aa",
+    "email": "drakken120@gmail.com",
+    "phoneNumber": "05060528330",
+    "roles": [
+      "Admin"
+    ]
+  }
+}

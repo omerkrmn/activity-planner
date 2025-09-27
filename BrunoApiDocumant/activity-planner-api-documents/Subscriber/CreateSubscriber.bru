@@ -1,0 +1,21 @@
+meta {
+  name: CreateSubscriber
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{ApiUrl}}activities/2078/subscribers
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "subscriberName": "{{$randomFirstName}}",
+    "subscriberSurname": "{{$randomLastName}}",
+    "subscriberMail": "{{$randomEmail}}",
+    "mailValidation": "",
+    "attendanceStatus": 0
+  }
+}

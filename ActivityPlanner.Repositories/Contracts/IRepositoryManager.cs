@@ -12,6 +12,6 @@ namespace ActivityPlanner.Repositories.Contracts
        
         IActivityRepository Activity { get; }
         ISubscriberRepository Subscriber { get; }
-        Task SaveAsync();
+        Task SaveAsync(CancellationToken cancellationToken = default);
     }
 }
