@@ -1,0 +1,32 @@
+﻿@using ActivityPlanner.Frontend.Models.Activities
+@code {
+    [Parameter] public ActivityFilterModel Model { get; set; } = new();
+    [Parameter] public EventCallback OnApply { get; set; }
+    [Parameter] public EventCallback OnReset { get; set; }
+
+    void Reset()
+    {
+        Model = new();
+        OnReset.InvokeAsync();
+    }
+}
+<h1 class="text-primary">Anaaa</h1>
+<div class="vstack gap-3">
+    <div>
+        <label class="form-label">Ülke</label>
+        <input class="form-control" @bind="Model.Country" placeholder="TR, US..." />
+    </div>
+    <div>
+        <label class="form-label">Şehir</label>
+        <input class="form-control" @bind="Model.City" placeholder="İzmir, İstanbul..." />
+    </div>
+    <div>
+        <label class="form-label">Tarih</label>
+        <input class="form-control" type="text" @bind="Model.DateString" />
+    </div>
+
+    <div class="d-grid gap-2">
+        <button class="btn btn-primary" @onclick="() => OnApply.InvokeAsync()">Uygula</button>
+        <button class="btn btn-outline-secondary" @onclick="Reset">Sıfırla</button>
+    </div>
+</div>

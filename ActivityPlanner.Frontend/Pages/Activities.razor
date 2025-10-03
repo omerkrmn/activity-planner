@@ -1,0 +1,70 @@
+﻿@page "/activities"
+@using ActivityPlanner.Frontend.Models.Activities
+@using ActivityPlanner.Frontend.Services.Contracts
+@using ActivityPlanner.Frontend.Components.Activities
+@inject IActivitiesApi ActivitiesApi
+
+<h2>Aktiviteler</h2>
+
+<div class="row g-3">
+    <aside class="col-lg-3">
+        <div class="card p-3">
+            <ActivityFiltersForm Model="_filter" OnApply="Load" OnReset="Reset" />
+        </div>
+    </aside>
+
+    <section class="col-lg-9">
+        @if (loading)
+        {
+            <p>Yükleniyor...</p>
+        }
+        else if (!string.IsNullOrEmpty(error))
+        {
+            <div class="alert alert-danger">@error</div>
+        }
+        else if (_items.Count == 0)
+        {
+            <div class="alert alert-info">Kayıt bulunamadı.</div>
+        }
+        else
+        {
+            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">
+                @foreach (var a in _items)
+                {
+                    <div class="col">
+                        <ActivityCard Item="a" />
+                    </div>
+                }
+            </div>
+        }
+    </section>
+</div>
+
+@code {
+    bool loading;
+    string? error;
+    ActivityFilterModel _filter = new();
+    List<ActivityDto> _items = new();
+
+    protected override async Task OnInitializedAsync() => await Load();
+
+    async Task Load()
+    {
+        loading = true; error = null;
+        try
+        {
+            _items = await ActivitiesApi.GetListAsync(_filter);
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+        }
+        finally { loading = false; }
+    }
+
+    async Task Reset()
+    {
+        _filter = new();
+        await Load();
+    }
+}

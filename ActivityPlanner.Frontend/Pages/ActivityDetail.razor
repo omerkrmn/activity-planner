@@ -1,0 +1,68 @@
+﻿@page "/activities/{id:int}"
+@using ActivityPlanner.Frontend.Models.Activities
+@using ActivityPlanner.Frontend.Services.Contracts
+@inject IActivitiesApi ActivitiesApi
+
+<h3>Aktivite Detayı</h3>
+
+@if (loading)
+{
+    <p>Yükleniyor...</p>
+}
+else if (!string.IsNullOrEmpty(error))
+{
+    <div class="alert alert-danger">@error</div>
+}
+else if (activity is not null)
+{
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h4 class="card-title">@activity.ActivityName</h4>
+            <p class="card-text">@activity.ActivityDescription</p>
+
+            <ul class="list-unstyled small">
+                <li><strong>Oluşturan Kullanıcı:</strong> @activity.AppUserId</li>
+                <li><strong>Oluşturulma:</strong> @activity.CreatedAt.ToString("dd.MM.yyyy HH:mm")</li>
+                <li><strong>Son Kayıt Tarihi:</strong> @activity.LastRegistrationDate.ToString("dd.MM.yyyy")</li>
+                <li><strong>Durum:</strong> @(activity.IsActive ? "Aktif" : "Pasif")</li>
+            </ul>
+
+            <div>
+                <span class="badge bg-success">Onaylı: @activity.AttendanceStatusConfirmedCount</span>
+                <span class="badge bg-warning text-dark ms-2">Emin değil: @activity.AttendanceStatusUnsureCount</span>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-info">Aktivite bulunamadı.</div>
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    bool loading;
+    string? error;
+    ActivityDto? activity;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        loading = true;
+        error = null;
+        activity = null;
+
+        try
+        {
+            activity = await ActivitiesApi.GetByIdAsync(Id);
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+        }
+        finally
+        {
+            loading = false;
+        }
+    }
+}

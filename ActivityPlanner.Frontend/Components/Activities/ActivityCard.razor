@@ -1,0 +1,29 @@
+﻿@using ActivityPlanner.Frontend.Models.Activities
+
+@code {
+    [Parameter] public ActivityDto Item { get; set; } = new();
+}
+
+<div class="card shadow-sm h-100">
+    <div class="card-body">
+        <h5 class="card-title">@Item.ActivityName</h5>
+        <p class="card-text text-muted small mb-2">
+            @Item.ActivityDescription
+        </p>
+
+        <div class="small mb-2">
+            <strong>Oluşturulma:</strong> @Item.CreatedAt.ToString("dd.MM.yyyy HH:mm") <br />
+            <strong>Son Kayıt Tarihi:</strong> @Item.LastRegistrationDate.ToString("dd.MM.yyyy")
+        </div>
+
+        <div class="small">
+            <span class="text-success">Onaylı:</span> @Item.AttendanceStatusConfirmedCount •
+            <span class="text-warning">Emin değil:</span> @Item.AttendanceStatusUnsureCount
+        </div>
+
+        @if (!Item.IsActive)
+        {
+            <div class="mt-2 badge bg-secondary">Pasif</div>
+        }
+    </div>
+</div>
