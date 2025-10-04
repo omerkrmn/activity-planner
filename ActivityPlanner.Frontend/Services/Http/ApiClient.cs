@@ -38,7 +38,7 @@ namespace ActivityPlanner.Frontend.Services.Http
         async Task<HttpRequestMessage> BuildRequest(HttpMethod method, string url, object? body = null)
         {
             var req = new HttpRequestMessage(method, url);
-            var token = await tokens.GetTokenAsync();
+            var token = await tokens.GetAccessTokenAsync();
             if (!string.IsNullOrWhiteSpace(token))
                 req.Headers.Authorization =
                     new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);

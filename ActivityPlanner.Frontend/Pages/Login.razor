@@ -1,0 +1,79 @@
+﻿@* Pages/Login.razor *@
+@page "/login"
+@using ActivityPlanner.Frontend.Components.Auth
+@using ActivityPlanner.Frontend.Models.Auth
+@using ActivityPlanner.Frontend.Services.Contracts.Auth
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.WebUtilities
+@attribute [AllowAnonymous]
+
+@* Not: IAuthService için kendi namespace’ini kullan *@
+@using ActivityPlanner.Frontend.Services.Auth
+@inject IAuthService Auth
+@inject NavigationManager Nav
+
+<CascadingAuthenticationState>
+    @if (_isAuthenticated)
+    {
+        <p>Zaten giriş yapmışsın, yönlendiriliyorsun…</p>
+    }
+    else
+    {
+        <h3>Giriş Yap</h3>
+        <LoginForm OnSubmit="HandleLogin" />
+        @if (!string.IsNullOrEmpty(_error))
+        {
+            <div class="alert alert-danger mt-3">@_error</div>
+        }
+    }
+</CascadingAuthenticationState>
+
+@code {
+    [CascadingParameter] private Task<AuthenticationState>? AuthStateTask { get; set; }
+
+    private string? _error;
+    private bool _isAuthenticated;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (AuthStateTask is not null)
+        {
+            var state = await AuthStateTask;
+            _isAuthenticated = state.User.Identity?.IsAuthenticated == true;
+            if (_isAuthenticated)
+            {
+                var returnUrl = GetReturnUrl(Nav.Uri);
+                Nav.NavigateTo(string.IsNullOrWhiteSpace(returnUrl) ? "/" : returnUrl, forceLoad: false);
+            }
+        }
+    }
+
+    private async Task HandleLogin(LoginRequest req)
+    {
+        try
+        {
+            _error = null;
+            var ok = await Auth.LoginAsync(req);
+            if (!ok)
+            {
+                _error = "Giriş başarısız.";
+                return;
+            }
+
+            var returnUrl = GetReturnUrl(Nav.Uri);
+            Nav.NavigateTo(string.IsNullOrWhiteSpace(returnUrl) ? "/" : returnUrl, forceLoad: false);
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+        }
+    }
+
+    private static string? GetReturnUrl(string currentUri)
+    {
+        var uri = new Uri(currentUri);
+        var query = QueryHelpers.ParseQuery(uri.Query);
+        return query.TryGetValue("returnUrl", out var val) ? (string?)val.ToString() : null;
+    }
+}

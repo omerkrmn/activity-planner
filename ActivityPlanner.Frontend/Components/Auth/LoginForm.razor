@@ -1,0 +1,16 @@
+﻿@* Components/Auth/LoginForm.razor *@
+@* BURADA @page OLMAYACAK *@
+@using ActivityPlanner.Frontend.Models.Auth
+
+@code {
+    [Parameter] public EventCallback<LoginRequest> OnSubmit { get; set; }
+    private string userName = "";
+    private string password = "";
+    private async Task Submit() => await OnSubmit.InvokeAsync(new LoginRequest(userName, password));
+}
+
+<div class="card p-3 gap-3" style="max-width:420px">
+    <input class="form-control" placeholder="Kullanıcı adı" @bind="userName" />
+    <input class="form-control" placeholder="Şifre" type="password" @bind="password" />
+    <button class="btn btn-primary" @onclick="Submit">Giriş</button>
+</div>

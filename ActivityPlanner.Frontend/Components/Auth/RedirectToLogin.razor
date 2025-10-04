@@ -1,0 +1,10 @@
+﻿@code {
+    [Inject] NavigationManager Nav { get; set; } = default!;
+
+    protected override void OnInitialized()
+    {
+        var target = $"/login?returnUrl={Uri.EscapeDataString(Nav.Uri)}";
+        if (!Nav.Uri.Contains("/login", StringComparison.OrdinalIgnoreCase))
+            Nav.NavigateTo(target, forceLoad: false);
+    }
+}
